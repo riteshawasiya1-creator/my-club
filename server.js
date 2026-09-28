@@ -87,25 +87,7 @@ setInterval(() => {
 }, 3000);
 
 
-// SQLite Database Connection
-const db = new sqlite3.Database('./myclub.db', (err) => {
-    if (err) {
-        console.error('Database connection error:', err.message);
-    } else {
-        console.log('Connected to SQLite database successfully.');
-    }
-});
 
-// Users Table बनाना
-db.run(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT,
-    balance REAL DEFAULT 3921262.00
-)`, (err) => {
-    if (!err) {
-        db.run(`INSERT OR IGNORE INTO users (id, username, balance) VALUES (1, 'player1', 3921262.00)`);
-    }
-});
 
 // 1. User Balance Fetch API
 app.get('/api/balance', (req, res) => {
