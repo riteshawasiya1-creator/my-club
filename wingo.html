@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY CLUB - WinGo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #5c1835; color: #fff; padding-bottom: 40px; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #3d0d21; padding: 15px; font-size: 18px; font-weight: bold; }
+        .back-btn { color: #fff; text-decoration: none; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 5px; font-size: 14px; }
+        .container { padding: 15px; }
+        
+        .wallet-card { background: #7a264a; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); border: 1px solid #9c3661; }
+        .wallet-title { font-size: 14px; opacity: 0.9; margin-bottom: 5px; }
+        .wallet-balance { font-size: 26px; font-weight: bold; margin-bottom: 15px; color: #ffe600; }
+        .wallet-btns { display: flex; gap: 10px; justify-content: center; }
+        .w-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; color: #fff; }
+        .btn-withdraw { background: #e74c3c; }
+        .btn-deposit { background: #2ecc71; }
+
+        .notice-bar { background: #7a264a; border: 1px solid #9c3661; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        .notice-left { display: flex; align-items: center; gap: 8px; overflow: hidden; font-size: 12px; color: #ddd; }
+        .notice-icon { font-size: 16px; flex-shrink: 0; }
+        .notice-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+        .notice-detail-btn { background: #e74c3c; color: #fff; border: none; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; flex-shrink: 0; }
+
+        .timer-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .timer-tab { background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 12px 5px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .timer-tab.active { background: #ff477e; border-color: #e0285e; }
+
+        .game-card-top { 
+            background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); 
+            border-radius: 14px; 
+            padding: 18px 15px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .game-card-top::before, .game-card-top::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background-color: #5c1835; 
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+        .game-card-top::before { top: -9px; }
+        .game-card-top::after { bottom: -9px; }
+        
+        .game-card-left { width: 50%; padding-right: 10px; border-right: 2px dashed rgba(255,255,255,0.35); }
+        .game-card-right { width: 50%; padding-left: 10px; text-align: right; }
+
+        .how-to-play { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+        .game-type-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #fff; }
+
+        .result-balls { display: flex; gap: 4px; align-items: center; }
+        
+        .res-ball { 
+            width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.5), 0 3px 6px rgba(0, 0, 0, 0.3);
+            overflow: hidden; 
+        }
+        .res-ball::before { content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 10px; height: 6px; background: rgba(255,255,255,0.85); border-radius: 50%; z-index: 5; }
+        .res-ball::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 8px; height: 5px; background: rgba(255,255,255,0.5); border-radius: 50%; z-index: 5; }
+        .res-ball span.side-dot-left, .res-ball span.side-dot-right { position: absolute; top: 50%; transform: translateY(-50%); width: 5px; height: 9px; background: rgba(255,255,255,0.7); border-radius: 50%; z-index: 5; }
+        .res-ball span.side-dot-left { left: -2px; }
+        .res-ball span.side-dot-right { right: -2px; }
+
+        .res-inner { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; z-index: 4; }
+        
+        .timer-title { font-size: 12px; opacity: 0.9; margin-bottom: 4px; font-weight: 500; }
+        .countdown-container { display: flex; gap: 3px; justify-content: flex-end; margin-bottom: 4px; }
+        .time-box { background: rgba(0,0,0,0.4); padding: 5px 8px; border-radius: 6px; font-size: 20px; font-weight: bold; color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+        .time-colon { font-size: 20px; font-weight: bold; display: flex; align-items: center; color: #fff; }
+        
+        .period-text { 
+            font-size: 15px !important; 
+            font-weight: 800 !important; 
+            color: #ffe600; 
+            margin-top: 6px; 
+            word-break: break-all; 
+            letter-spacing: 0.5px;
+        }
+        .color-btns { display: flex; gap: 10px; margin-bottom: 15px; }
+        .c-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; color: #fff; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+        .btn-green { background: #00e676; color: #000; }
+        .btn-violet { background: #aa00ff; }
+        .btn-red { background: #ff3d00; }
+        .number-grid { 
+            background: #7a264a; 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 14px; 
+            justify-items: center; 
+            border: 1px solid #9c3661; 
+            position: relative; 
+        }
+        #countdownOverlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 12px;
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+        }
+        .countdown-digits-box { display: flex; gap: 12px; }
+        .countdown-digit-card {
+            background: #3d0d21;
+            color: #ffb3c6;
+            font-size: 105px;
+            font-weight: bold;
+            width: 115px;
+            height: 150px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            border: 3px solid #9c3661;
+        }
+        .num-btn { width: 64px; height: 64px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.6), inset 0 -4px 8px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4); overflow: hidden; }
+        .num-btn::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 22px; height: 14px; background: rgba(255,255,255,0.85); border-radius: 50%; z-index: 5; }
+        .num-btn::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 20px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; z-index: 5; }
+        .num-btn span.side-dot-left, .num-btn span.side-dot-right { position: absolute; top: 50%; transform: translateY(-50%); width: 10px; height: 18px; background: rgba(255,255,255,0.7); border-radius: 50%; z-index: 5; }
+        .num-btn span.side-dot-left { left: -4px; }
+        .num-btn span.side-dot-right { right: -4px; }
+
+        .num-inner { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; z-index: 4; }
+        
+        .ball-bg-green { background: #00e676; }
+        .ball-bg-green .num-inner, .ball-bg-green .res-inner { background: linear-gradient(135deg, #e8f5e9 0%, #b9f6ca 100%); color: #00a854; }
+
+        .ball-bg-red { background: #ff3d00; }
+        .ball-bg-red .num-inner, .ball-bg-red .res-inner { background: linear-gradient(135deg, #ffebee 0%, #ff8a80 100%); color: #d50000; }
+
+        .ball-bg-violet { background: #aa00ff; }
+        .ball-bg-violet .num-inner, .ball-bg-violet .res-inner { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); color: #7c3aed; }
+
+        .ball-bg-violet-red { background: linear-gradient(135deg, #ff3d00 50%, #aa00ff 50%); }
+        .ball-bg-violet-red .num-inner, .ball-bg-violet-red .res-inner { background: linear-gradient(135deg, #ffebee 0%, #ff8a80 100%); color: #d50000; }
+
+        .ball-bg-green-violet { background: linear-gradient(135deg, #00e676 50%, #aa00ff 50%); }
+        .ball-bg-green-violet .num-inner, .ball-bg-green-violet .res-inner { background: linear-gradient(135deg, #e8f5e9 0%, #b9f6ca 100%); color: #00a854; }
+
+        .table-num-green { color: #00e676; font-weight: 900; font-size: 34px; }
+        .table-num-red { color: #ff3d00; font-weight: 900; font-size: 34px; }
+        .table-num-violet-red { background: linear-gradient(135deg, #ff3d00 50%, #aa00ff 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 34px; }
+        .table-num-green-violet { background: linear-gradient(135deg, #00e676 50%, #aa00ff 50%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-size: 34px; }
+
+        .table-bs { font-size: 17px; font-weight: 600; }
+
+        .color-dot-container { display: flex; gap: 6px; align-items: center; }
+        .color-dot { width: 13px; height: 13px; border-radius: 50%; display: inline-block; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+        .dot-green { background-color: #00e676; }
+        .dot-red { background-color: #ff3d00; }
+        .dot-violet { background-color: #aa00ff; }
+
+        .multiplier-bar { display: flex; gap: 4px; margin-bottom: 12px; justify-content: space-between; align-items: center; }
+        .mult-btn-random { flex: 1.5; background: #3d0d21; border: 1px solid #9c3661; color: #fff; padding: 7px 2px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
+        .mult-btn { flex: 0.8; background: #3d0d21; border: 1px solid #9c3661; color: #fff; padding: 7px 2px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
+        .mult-btn.active { background: #ff477e; border-color: #e0285e; }
+
+        .big-small-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+        .bs-btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+        .btn-big { background: #f39c12; }
+        .btn-small { background: #3498db; }
+        
+        .history-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+        .hist-tab { flex: 1; background: #3d0d21; border: 1px solid #9c3661; color: #fff; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
+        .hist-tab.active { background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); border-color: #e0285e; }
+
+        .history-table-container { background: #7a264a; border-radius: 12px; border: 1px solid #9c3661; overflow: hidden; margin-bottom: 15px; }
+        .history-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .history-table th { background: #3d0d21; color: #aaa; padding: 12px 10px; font-weight: 500; font-size: 14px; }
+        .history-table td { padding: 14px 10px; border-top: 1px solid #9c3661; color: #fff; vertical-align: middle; }
+
+        .chart-stats-box { background: #471128; border: 1px solid #9c3661; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .chart-stats-header { background: #3d0d21; padding: 10px 15px; font-size: 14px; font-weight: bold; color: #aaa; display: flex; justify-content: space-between; border-bottom: 1px solid #9c3661; }
+        .chart-stat-row { display: flex; padding: 10px 15px; font-size: 13px; border-bottom: 1px solid rgba(156, 54, 97, 0.4); align-items: center; }
+        .chart-stat-label { width: 130px; color: #ccc; font-weight: 500; }
+        .chart-stat-values { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+        .stat-num-circle { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #e74c3c; color: #e74c3c; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .chart-trend-row { background: #5c1835; border-bottom: 1px solid #9c3661; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .chart-trend-period { font-size: 13px; font-weight: bold; color: #ddd; width: 135px; }
+        .chart-trend-numbers { flex: 1; display: flex; justify-content: space-between; align-items: center; max-width: 250px; position: relative; z-index: 2; }
+        .chart-ball-node { width: 24px; height: 24px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #777; background: #471128; }
+        .chart-ball-node.winning { border-style: solid; font-weight: bold; color: #fff; box-shadow: 0 0 8px rgba(0,0,0,0.5); }
+        .chart-ball-node.winning.red { background: #ff3d00; border-color: #ff3d00; }
+        .chart-ball-node.winning.green { background: #00e676; border-color: #00e676; color: #000; }
+        .chart-ball-node.winning.violet { background: #aa00ff; border-color: #aa00ff; }
+        .chart-bs-badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: #fff; text-align: center; width: 26px; }
+        .chart-bs-badge.big { background: #f39c12; }
+        .chart-bs-badge.small { background: #3498db; }
+        
+        .my-hist-card { background: #5c1835; border-bottom: 1px solid #9c3661; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .my-hist-left { display: flex; align-items: center; gap: 12px; }
+        .my-badge { padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; color: #fff; text-align: center; min-width: 70px; }
+        .my-badge.big { background-color: #f39c12; }
+        .my-badge.small { background-color: #3498db; }
+        .my-badge.green { background-color: #00e676; color: #000; }
+        .my-badge.red { background-color: #ff3d00; }
+        .my-badge.violet { background-color: #aa00ff; }
+        .my-badge.num { background-color: #718093; color: #fff; }
+        .my-info-col div:nth-child(1) { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 3px; }
+        .my-info-col div:nth-child(2) { font-size: 11px; color: #aaa; }
+        .my-hist-right { text-align: right; }
+        .my-status { font-size: 13px; font-weight: bold; margin-bottom: 4px; padding: 2px 8px; border-radius: 4px; display: inline-block; border: 1px solid; }
+        .status-succeed { color: #00e676; border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.08); }
+        .status-failed { color: #e74c3c; border-color: rgba(231,76,60,0.4); background: rgba(231,76,60,0.08); }
+        .status-pending { color: #f39c12; border-color: rgba(243,156,18,0.4); background: rgba(243,156,18,0.08); }
+        .my-amount { font-size: 14px; font-weight: bold; }
+        .my-amount.pos { color: #00e676; }
+        .my-amount.neg { color: #e74c3c; }
+
+        .payment-option { display: flex; align-items: center; gap: 8px; }
+        .usdt-icon { background-image: url('usdt.jpg'); background-size: cover; width: 24px; height: 24px; display: inline-block; }
+
+        #toast {
+            visibility: hidden; min-width: 220px; background-color: rgba(0, 0, 0, 0.85); color: #00e676; text-align: center; border-radius: 8px; padding: 14px;
+            position: fixed; z-index: 3000; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold; border: 1px solid #00e676;
+        }
+        #toast.show { visibility: visible; animation: fadeInOut 2s ease; }
+        @keyframes fadeInOut { 0% { opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* WINGED WIN / LOSE POPUP MODAL CSS */
+        .result-modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); z-index: 4000; justify-content: center; align-items: center;
+        }
+        .result-modal-box {
+            width: 90%; max-width: 330px; border-radius: 20px; text-align: center; color: #fff; position: relative; padding-top: 40px; padding-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: popIn 0.3s ease;
+        }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .result-modal-box.win { background: linear-gradient(180deg, #ff9f43 0%, #ff5252 100%); }
+        .result-modal-box.lose { background: linear-gradient(180deg, #74b9ff 0%, #0984e3 100%); }
+
+        .wing-badge-wrapper { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 130px; height: 75px; display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .wing-icon-bg { width: 65px; height: 65px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; z-index: 2; }
+        .wing-icon-bg svg { width: 34px; height: 34px; }
+        .wing-left, .wing-right { position: absolute; top: 10px; width: 45px; height: 50px; background: rgba(255, 255, 255, 0.95); border-radius: 50% 50% 20% 20%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 1; }
+        .wing-left { left: 5px; transform: rotate(-15deg); clip-path: polygon(0 0, 100% 10%, 90% 100%, 0 80%); }
+        .wing-right { right: 5px; transform: rotate(15deg); clip-path: polygon(0 10%, 100% 0, 100% 80%, 10% 100%); }
+
+        .result-modal-title { font-size: 24px; font-weight: bold; margin-bottom: 12px; margin-top: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); letter-spacing: 0.5px; }
+        .result-ticket-card { background: #fff; color: #333; margin: 0 12px; border-radius: 12px; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+        .rt-results-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; font-weight: 500; color: #555; padding: 0 5px; }
+        .rt-badges-group { display: flex; gap: 4px; align-items: center; }
+        .rt-badge { padding: 3px 7px; border-radius: 4px; color: #fff; font-size: 11px; font-weight: bold; }
+        .rt-badge.green { background: #00e676; color: #000; }
+        .rt-badge.red { background: #ff3d00; }
+        .rt-badge.violet { background: #aa00ff; }
+        .rt-badge.big { background: #f39c12; }
+        .rt-badge.small { background: #3498db; }
+        .rt-badge.num { background: #718093; color: #fff; }
+        .rt-strip { background: #f8f9fa; border-top: 2px dashed #dfe4ea; border-bottom: 2px dashed #dfe4ea; padding: 10px 0; margin: 5px 0; border-radius: 4px; }
+        .rt-strip-heading { font-size: 12px; color: #a4b0be; margin-bottom: 2px; }
+        .rt-strip-value { font-size: 24px; font-weight: 900; }
+        .rt-strip-value.win-color { color: #00b894; }
+        .rt-strip-value.lose-color { color: #ff4757; }
+        .rt-period-text { font-size: 11px; color: #a4b0be; margin-top: 4px; }
+        
+        .result-auto-close { font-size: 12px; color: rgba(255,255,255,0.9); margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .result-close-x { position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); width: 36px; height: 36px; border: 2px solid #fff; border-radius: 50%; background: transparent; color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .bet-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: flex-end; flex-direction: column; }
+        .bet-modal-container { background: #3d0d21; border-top-left-radius: 20px; border-top-right-radius: 20px; overflow: hidden; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+        .bet-modal-header { padding: 15px; text-align: center; font-size: 16px; font-weight: bold; color: #fff; padding-bottom: 25px; position: relative; }
+        .bet-modal-title-box { background: #fff; color: #333; padding: 8px 20px; border-radius: 4px; display: inline-block; font-weight: bold; font-size: 15px; margin-bottom: 5px; }
+        .bet-modal-body { padding: 20px; }
+        .bm-section-title { font-size: 14px; margin-bottom: 8px; color: #ccc; }
+        .bm-balance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .bm-bal-btn { background: #5c1835; border: 1px solid #7a264a; color: #fff; padding: 10px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; }
+        .bm-bal-btn.active { background: #ff477e; border-color: #e0285e; }
+        .bm-qty-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .bm-qty-controls { display: flex; align-items: center; gap: 8px; }
+        .bm-qty-btn { background: #ff477e; color: #fff; border: none; width: 36px; height: 36px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .bm-qty-input { width: 50px; height: 36px; background: #5c1835; border: 1px solid #7a264a; color: #fff; text-align: center; font-size: 16px; font-weight: bold; border-radius: 6px; }
+        .bm-mult-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 15px; }
+        .bm-mult-btn { background: #5c1835; border: 1px solid #7a264a; color: #fff; padding: 8px 2px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+        .bm-mult-btn.active { background: #ff477e; border-color: #e0285e; }
+        .bm-rules-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 20px; color: #aaa; }
+        .bm-footer { display: flex; }
+        .bm-cancel-btn { flex: 1; background: #5c1835; border: none; color: #fff; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .bm-confirm-btn { flex: 2; border: none; color: #fff; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        /* DEPOSIT PAGE STYLES */
+        #depositPage {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #471128; z-index: 5000; overflow-y: auto; padding-bottom: 50px;
+        }
+        .dep-header { display: flex; justify-content: space-between; align-items: center; background: #3d0d21; padding: 15px; font-size: 18px; font-weight: bold; position: sticky; top: 0; z-index: 10; }
+        .dep-wallet-card { background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); border-radius: 12px; padding: 20px; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .dep-wallet-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; opacity: 0.9; }
+        .dep-balance { font-size: 26px; font-weight: bold; color: #fff; margin-bottom: 15px; }
+        .dep-channels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 15px; margin-bottom: 15px; }
+        .dep-channel-item { background: #3d0d21; border: 1px solid #9c3661; border-radius: 10px; padding: 12px 5px; text-align: center; cursor: pointer; color: #fff; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .dep-channel-item.active { border-color: #ff477e; background: #5c1835; }
+        .dep-channel-item img, .dep-channel-item div.icon-placeholder { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: rgba(255,255,255,0.1); }
+        .dep-section-box { padding: 0 15px; margin-bottom: 15px; }
+        .dep-section-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #ddd; display: flex; align-items: center; gap: 6px; }
+        .sub-channels-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .sub-channel-card { background: #3d0d21; border: 1px solid #9c3661; border-radius: 10px; padding: 12px; cursor: pointer; }
+        .sub-channel-card.active { background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); border-color: transparent; }
+        .sub-channel-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .sub-channel-desc { font-size: 11px; opacity: 0.8; }
+        .dep-amounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .dep-amt-btn { background: #3d0d21; border: 1px solid #9c3661; color: #fff; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; }
+        .dep-amt-btn.active { background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); border-color: transparent; }
+        .dep-input-box { background: #3d0d21; border: 1px solid #9c3661; border-radius: 8px; padding: 12px 15px; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .dep-input-box input { background: transparent; border: none; color: #fff; font-size: 16px; width: 100%; outline: none; }
+        .dep-instructions { background: #3d0d21; border: 1px solid #9c3661; border-radius: 12px; padding: 15px; margin: 0 15px 20px 15px; font-size: 12px; color: #aaa; line-height: 1.6; }
+        .dep-instructions li { margin-bottom: 6px; margin-left: 15px; }
+        .dep-footer-btn { position: fixed; bottom: 0; left: 0; width: 100%; background: #3d0d21; padding: 15px; border-top: 1px solid #9c3661; display: flex; justify-content: space-between; align-items: center; z-index: 20; }
+        .dep-footer-left { font-size: 13px; color: #aaa; }
+        .dep-footer-left span { color: #fff; font-weight: bold; display: block; }
+        .dep-submit-btn { background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); color: #fff; border: none; padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+
+        /* WITHDRAW PAGE STYLES */
+        #withdrawPage {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #211533; z-index: 5000; overflow-y: auto; padding-bottom: 50px; color: #fff;
+        }
+        .wd-header { display: flex; justify-content: space-between; align-items: center; background: #281b3d; padding: 15px; font-size: 18px; font-weight: bold; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #3d2c59; }
+        .wd-wallet-card { background: linear-gradient(135deg, #8c52ff 0%, #5ce1e6 100%); border-radius: 16px; padding: 20px; margin: 15px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+        .wd-wallet-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; opacity: 0.9; color: #1a1a1a; font-weight: 500; }
+        .wd-balance { font-size: 28px; font-weight: bold; color: #111; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        .wd-channel-banner { background: linear-gradient(90deg, #6c5ce7 0%, #a29bfe 100%); border-radius: 12px; padding: 14px 15px; margin: 0 15px 15px 15px; font-size: 14px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .wd-methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; margin-bottom: 15px; }
+        .wd-method-item { background: #2d1e46; border: 1px solid #48336b; border-radius: 12px; padding: 16px 10px; text-align: center; cursor: pointer; color: #aaa; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .wd-method-item.active { border-color: #8c52ff; background: #392659; color: #fff; box-shadow: 0 0 10px rgba(140, 82, 255, 0.3); }
+        .wd-method-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.08); border-radius: 8px; }
+
+        .wd-form-box { background: #2d1e46; border: 1px solid #48336b; border-radius: 14px; padding: 15px; margin: 0 15px 15px 15px; }
+        .wd-input-group { margin-bottom: 12px; }
+        .wd-label { font-size: 13px; color: #b2bec3; margin-bottom: 6px; display: block; }
+        .wd-input-field { width: 100%; background: #1e1330; border: 1px solid #48336b; border-radius: 8px; padding: 12px 15px; color: #fff; font-size: 16px; outline: none; }
+        .wd-input-field:focus { border-color: #8c52ff; }
+
+        .wd-rules-box { background: #2d1e46; border: 1px solid #48336b; border-radius: 14px; padding: 15px; margin: 0 15px 20px 15px; font-size: 12px; color: #b2bec3; line-height: 1.6; }
+        .wd-rules-box li { margin-bottom: 6px; margin-left: 15px; }
+        
+        .wd-submit-btn { background: linear-gradient(135deg, #8c52ff 0%, #6c5ce7 100%); color: #fff; border: none; width: calc(100% - 30px); margin: 0 15px; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); }
+
+        /* QR GATEWAY PAGE */
+        #qrGatewayPage {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #471128; z-index: 6000; overflow-y: auto; padding: 10px; text-align: center;
+        }
+        .qr-card { background: #5c1835; border: 1px solid #9c3661; border-radius: 16px; padding: 20px 15px; width: 100%; max-width: 100%; margin: 0 auto; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .qr-timer { font-size: 22px; font-weight: bold; color: #ff477e; margin-bottom: 10px; }
+        .qr-img-box { background: #fff; padding: 15px; border-radius: 12px; display: inline-block; margin: 15px 0; }
+        .qr-img-box img { width: 180px; height: 180px; object-fit: contain; }
+        .app-links-grid { display: flex; justify-content: center; gap: 12px; margin: 15px 0; }
+        .app-link-btn { background: #3d0d21; border: 1px solid #9c3661; padding: 10px 14px; border-radius: 8px; color: #fff; font-size: 13px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        .utr-input-box { width: 100%; background: #3d0d21; border: 1px solid #9c3661; border-radius: 8px; padding: 12px; color: #fff; font-size: 15px; margin-top: 15px; margin-bottom: 15px; outline: none; text-align: center; }
+        .submit-utr-btn { background: linear-gradient(135deg, #00e676 0%, #00b894 100%); color: #000; border: none; width: 100%; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+ <div id="toast">Bet Success!</div>
+     
+    <!-- Winged Win / Lose Popup Modal -->
+    <div class="result-modal-overlay" id="resultModalOverlay">
+        <div class="result-modal-box" id="resultModalBox">
+            <div class="wing-badge-wrapper">
+                <div class="wing-left"></div>
+                <div class="wing-icon-bg" id="wingIconContainer"></div>
+                <div class="wing-right"></div>
+            </div>
+            
+            <div class="result-modal-title" id="resultModalTitle">Congratulations</div>
+            
+            <div class="result-ticket-card">
+                <div class="rt-results-row">
+                    <span>Lottery results</span>
+                    <div class="rt-badges-group" id="rtBadgesContainer"></div>
+                </div>
+                <div class="rt-strip">
+                    <div class="rt-strip-heading" id="rtStripHeading">Bonus</div>
+                    <div class="rt-strip-value" id="rtStripValue">₹1.96</div>
+                    <div class="rt-period-text">Period: WinGo 30sec <span id="rtPeriodVal">--</span></div>
+                </div>
+            </div>
+            
+            <div class="result-auto-close">&#10003; 3 seconds auto close</div>
+            <button class="result-close-x" onclick="closeResultModal()">&times;</button>
+        </div>
+    </div>
+
+    <!-- QR GATEWAY PAYMENT PAGE WITH TIMER & UTR -->
+    <div id="qrGatewayPage">
+        <div class="dep-header" style="position:relative; margin:-10px -10px 20px -10px;">
+            <a href="javascript:void(0)" onclick="closeQrGateway()" class="back-btn">&larr;</a>
+            <div>Complete Payment</div>
+            <div style="width:30px;"></div>
+        </div>
+        <div class="qr-card">
+            <div style="font-size: 14px; color: #aaa;">Scan QR & Pay Amount</div>
+            
+            <h3 id="display-amount" style="font-size: 20px; font-weight: bold; color: #ffe600; margin: 5px 0;">₹100.00</h3>
+            
+            <div class="qr-timer" id="qrTimerDisplay">08:00</div>
+            
+            <div class="qr-img-box">
+                <img id="dynamicQrImage" src="qr.jpg" alt="QR Code">
+            </div>
+            <div style="font-size: 12px; color: #ddd; margin-bottom: 10px;">Supported UPI Apps (Click to open app):</div>
+            
+            <div class="app-links-grid">
+                <a id="phonepe-btn" href="#" class="app-link-btn" onclick="showToast('Opening PhonePe...')">PhonePe</a>
+                <a id="paytm-btn" href="#" class="app-link-btn" onclick="showToast('Opening Paytm...')">Paytm</a>
+                <a id="gpay-btn" href="#" class="app-link-btn" onclick="showToast('Opening Google Pay...')">GPay</a>
+            </div>
+
+            <div style="margin-top: 15px; margin-bottom: 10px;">
+                <input type="number" id="custom-amount" class="utr-input-box" placeholder="Enter amount (100-10000)" min="100" max="10000" style="margin-bottom: 8px;">
+                <button class="submit-utr-btn" style="background: linear-gradient(135deg, #ff477e 0%, #ff758c 100%); color: #fff; margin-bottom: 10px;" onclick="generateUpiPayment(document.getElementById('custom-amount').value)">Update Amount / Generate Link</button>
+            </div>
+
+            <div style="font-size: 12px; color: #aaa; text-align: left; margin-top: 10px;">Enter 12-digit UTR / Ref ID after payment:</div>
+            <input type="text" id="utrInputNumber" class="utr-input-box" placeholder="Enter 12-digit UTR Number" maxlength="12">
+            
+            <button class="submit-utr-btn" onclick="submitUtrCode()">Submit UTR & Verify</button>
+        </div>
+    </div>
+
+    <!-- WITHDRAW PAGE -->
+    <div id="withdrawPage">
+        <div class="wd-header">
+            <a href="javascript:void(0)" onclick="closeWithdrawPage()" class="back-btn">&larr;</a>
+            <div>Withdraw</div>
+            <div style="font-size: 13px; font-weight: normal; cursor: pointer; color: #a29bfe;" onclick="showToast('Withdrawal history opened')">Withdrawal history</div>
+        </div>
+
+        <div class="wd-wallet-card">
+            <div class="wd-wallet-top">
+                <span>Available balance</span>
+                <span>**** ****</span>
+            </div>
+            <div class="wd-balance" id="wdWalletBalance">₹0.00 <span style="font-size: 16px; cursor: pointer;" onclick="showToast('Balance synced')">&#8635;</span></div>
+        </div>
+
+        <div class="wd-channel-banner">
+            ARPay Supports UPI for fast payment
+        </div>
+
+        <div class="wd-methods-grid">
+            <div class="wd-method-item active" onclick="selectWithdrawMethod('BANK CARD', this)">
+                <div class="wd-method-icon">💳</div>
+                <span>BANK CARD</span>
+            </div>
+            <div class="wd-method-item" onclick="selectWithdrawMethod('UPI', this)">
+                <div class="wd-method-icon">📱</div>
+                <span>UPI</span>
+            </div>
+            <div class="wd-method-item" onclick="selectWithdrawMethod('USDT', this)">
+                <div class="wd-method-icon">₮</div>
+                <span>USDT</span>
+            </div>
+        </div>
+
+        <div class="wd-form-box">
+            <div class="wd-input-group">
+                <label class="wd-label">Withdrawal Amount (₹)</label>
+                <input type="number" id="wdAmountInput" class="wd-input-field" placeholder="Enter amount (Min: ₹200)">
+            </div>
+            <div class="wd-input-group" id="wdDynamicFieldContainer">
+                <label class="wd-label" id="wdDynamicLabel">Bank Account Number</label>
+                <input type="text" id="wdDynamicInput" class="wd-input-field" placeholder="Enter account number">
+            </div>
+        </div>
+
+        <div class="wd-rules-box">
+            <div style="font-weight: bold; color: #fff; margin-bottom: 6px;">📖 Withdrawal instructions</div>
+            <li>Need to finish bet requirement before withdrawal.</li>
+            <li>Opening time: 00:00 to 23:59.</li>
+            <li>Minimum withdrawal amount is ₹200.00.</li>
+            <li>Please make sure your bank information is correct.</li>
+        </div>
+
+        <button class="wd-submit-btn" onclick="submitWithdraw()">Withdraw Now</button>
+    </div>
+
+    <!-- SEPARATE DEPOSIT PAGE -->
+    <div id="depositPage">
+        <div class="dep-header">
+            <a href="javascript:void(0)" onclick="closeDepositPage()" class="back-btn">&larr;</a>
+            <div>Deposit</div>
+            <div style="font-size: 14px; font-weight: normal; cursor: pointer;" onclick="showToast('Deposit History opened')">Deposit history</div>
+        </div>
+
+        <div class="dep-wallet-card">
+            <div class="dep-wallet-top">
+                <span>Balance</span>
+                <span>**** ****</span>
+            </div>
+            <div class="dep-balance" id="depWalletBalance">₹0.00</div>
+        </div>
+
+        <div class="dep-channels-grid">
+            <div class="dep-channel-item active" onclick="selectTopChannel('Innate UPI-QR', this)">
+                <div class="icon-placeholder">📱</div>
+                <span>Innate UPI-QR</span>
+            </div>
+            <div class="dep-channel-item" onclick="selectTopChannel('Expert UPI-QR', this)">
+                <div class="icon-placeholder">⚡</div>
+                <span>Expert UPI-QR</span>
+            </div>
+            <div class="dep-channel-item" onclick="selectTopChannel('PAYTM', this)">
+                <div class="icon-placeholder">💙</div>
+                <span>PAYTM</span>
+            </div>
+            <div class="dep-channel-item" onclick="selectTopChannel('USDT', this)">
+                <div class="payment-option" style="justify-content:center;">
+                    <img src="usdt.jpg" alt="USDT" width="24" height="24" style="border-radius:4px;">
+                </div>
+                <span>USDT</span>
+            </div>
+        </div>
+
+        <div class="dep-section-box">
+            <div class="dep-section-title">💳 Select channel</div>
+            <div class="sub-channels-grid" id="subChannelsContainer">
+                <div class="sub-channel-card active" onclick="selectSubChannel('QR-Umoney', '100 - 10K', this)">
+                    <div class="sub-channel-name">QR-Umoney</div>
+                    <div class="sub-channel-desc">Balance:100 - 10K</div>
+                </div>
+                <div class="sub-channel-card" onclick="selectSubChannel('QR-YayaPay', '100 - 50K', this)">
+                    <div class="sub-channel-name">QR-YayaPay</div>
+                    <div class="sub-channel-desc">Balance:100 - 50K</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dep-section-box">
+            <div class="dep-section-title">💰 Deposit amount</div>
+            <div class="dep-amounts-grid">
+                <button class="dep-amt-btn active" onclick="setDepositAmt(100, this)">₹ 100</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(300, this)">₹ 300</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(500, this)">₹ 500</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(800, this)">₹ 800</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(1000, this)">₹ 1K</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(2000, this)">₹ 2K</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(3000, this)">₹ 3K</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(5000, this)">₹ 5K</button>
+                <button class="dep-amt-btn" onclick="setDepositAmt(10000, this)">₹ 10K</button>
+            </div>
+            <div class="dep-input-box">
+                <span>₹</span>
+                <input type="number" id="depCustomAmt" value="100" oninput="manualDepositInput()">
+                <span style="opacity: 0.5; cursor: pointer;" onclick="document.getElementById('depCustomAmt').value=''; manualDepositInput();">&times;</span>
+            </div>
+        </div>
+        
+        <div class="dep-instructions">
+            <div style="font-weight: bold; color: #fff; margin-bottom: 6px;">📖 Recharge instructions</div>
+            <li>If the transfer time is up, please fill out the deposit form again.</li>
+            <li>The transfer amount must match the order you created, otherwise the money cannot be credited successfully.</li>
+            <li>If you transfer the wrong amount, our company will not be responsible for the lost amount!</li>
+            <li>Note: do not cancel the deposit order after the money has been transferred.</li>
+        </div>
+
+        <div class="dep-footer-btn">
+            <div class="dep-footer-left">
+                Recharge Method:
+                <span id="selectedRechargeMethodText">QR-Umoney</span>
+            </div>
+            <button class="dep-submit-btn" onclick="submitDeposit()">Deposit ₹100.00</button>
+        </div>
+    </div>
+    
+    <div class="header">
+        <a href="index.html" class="back-btn">&larr; Back</a>
+        <div class="logo">MY CLUB</div>
+        <div style="width: 40px;"></div>
+    </div>
+ <div class="container">
+        <div class="wallet-card">
+            <div class="wallet-title">Wallet balance</div>
+            <div class="wallet-balance" id="walletBalance">₹0.00</div>
+            <div class="wallet-btns">
+                <button class="w-btn btn-withdraw" onclick="openWithdrawPage()">Withdraw</button>
+                <button class="w-btn btn-deposit" onclick="openDepositPage()">Deposit</button>
+            </div>
+        </div>
+
+        <div class="notice-bar">
+            <div class="notice-left">
+                <span class="notice-icon">&#128227;</span>
+                <span class="notice-text">Our customer service will never send an...</span>
+            </div>
+            <button class="notice-detail-btn" onclick="showToast('Detail opened')">Detail</button>
+        </div>
+
+        <div class="timer-tabs">
+            <button class="timer-tab active" onclick="switchTab(30, this)"><span>WinGo</span><span>30sec</span></button>
+            <button class="timer-tab" onclick="switchTab(60, this)"><span>WinGo</span><span>1 Min</span></button>
+            <button class="timer-tab" onclick="switchTab(180, this)"><span>WinGo</span><span>3 Min</span></button>
+            <button class="timer-tab" onclick="switchTab(300, this)"><span>WinGo</span><span>5 Min</span></button>
+        </div>
+
+        <div class="game-card-top">
+            <div class="game-card-left">
+                <button class="how-to-play" onclick="showToast('Rules info')">&#128221; How to play</button>
+                <div class="game-type-title" id="gameTypeTitle">WinGo 30sec</div>
+                <div class="result-balls" id="topResultBalls"></div>
+            </div>
+            <div class="game-card-right">
+                <div class="timer-title">Time remaining</div>
+                <div class="countdown-container">
+                    <div class="time-box" id="m1">0</div>
+                    <div class="time-box" id="m2">0</div>
+                    <div class="time-colon">:</div>
+                    <div class="time-box" id="s1">2</div>
+                    <div class="time-box" id="s2">9</div>
+                </div>
+                <div class="period-text" id="periodDisplay">--</div>
+            </div>
+        </div>
+
+        <div class="color-btns">
+            <button class="c-btn btn-green" onclick="openBetModal('Green', '#00e676')">Green</button>
+            <button class="c-btn btn-violet" onclick="openBetModal('Violet', '#aa00ff')">Violet</button>
+            <button class="c-btn btn-red" onclick="openBetModal('Red', '#ff3d00')">Red</button>
+        </div>
+
+        <div class="number-grid">
+            <div id="countdownOverlay">
+                <div class="countdown-digits-box">
+                    <div class="countdown-digit-card" id="cdDigit1">0</div>
+                    <div class="countdown-digit-card" id="cdDigit2">4</div>
+                </div>
+            </div>
+            <button class="num-btn ball-bg-violet-red" onclick="openBetModal(0, '#ff3d00')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">0</div></button>
+            <button class="num-btn ball-bg-green" onclick="openBetModal(1, '#00e676')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">1</div></button>
+            <button class="num-btn ball-bg-red" onclick="openBetModal(2, '#ff3d00')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">2</div></button>
+            <button class="num-btn ball-bg-green" onclick="openBetModal(3, '#00e676')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">3</div></button>
+            <button class="num-btn ball-bg-red" onclick="openBetModal(4, '#ff3d00')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">4</div></button>
+            <button class="num-btn ball-bg-green-violet" onclick="openBetModal(5, '#00e676')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">5</div></button>
+            <button class="num-btn ball-bg-red" onclick="openBetModal(6, '#ff3d00')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">6</div></button>
+            <button class="num-btn ball-bg-green" onclick="openBetModal(7, '#00e676')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">7</div></button>
+            <button class="num-btn ball-bg-red" onclick="openBetModal(8, '#ff3d00')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">8</div></button>
+            <button class="num-btn ball-bg-green" onclick="openBetModal(9, '#00e676')"><span class="side-dot-left"></span><span class="side-dot-right"></span><div class="num-inner">9</div></button>
+        </div>
+
+        <div class="multiplier-bar">
+            <button class="mult-btn-random" onclick="showToast('Random selected')">Random</button>
+            <button class="mult-btn active" onclick="showToast('X1')">X1</button>
+            <button class="mult-btn" onclick="showToast('X5')">X5</button>
+            <button class="mult-btn" onclick="showToast('X10')">X10</button>
+            <button class="mult-btn" onclick="showToast('X20')">X20</button>
+            <button class="mult-btn" onclick="showToast('X50')">X50</button>
+            <button class="mult-btn" onclick="showToast('X100')">X100</button>
+        </div>
+
+        <div class="big-small-btns">
+            <button class="bs-btn btn-big" onclick="openBetModal('Big', '#f39c12')">Big</button>
+            <button class="bs-btn btn-small" onclick="openBetModal('Small', '#3498db')">Small</button>
+        </div>
+
+        <div class="history-tabs">
+            <button class="hist-tab active" onclick="switchHistTab(this, 'game')">Game history</button>
+            <button class="hist-tab" onclick="switchHistTab(this, 'chart')">Chart</button>
+            <button class="hist-tab" onclick="switchHistTab(this, 'my')">My history</button>
+        </div>
+
+        <div id="historySectionContainer"></div>
+    </div>
+<!-- BET MODAL -->
+    <div class="bet-modal-overlay" id="betModalOverlay">
+        <div class="bet-modal-container">
+            <div class="bet-modal-header" id="betModalHeaderBg">
+                <div class="bet-modal-title-box" id="betModalTitle">WinGo 30sec</div>
+                <div style="font-size: 13px; opacity: 0.9;" id="betModalSubTitle">WinGo 30sec</div>
+            </div>
+            <div class="bet-modal-body">
+                <div class="bm-section-title">Contract Money</div>
+                <div class="bm-balance-grid">
+                    <button class="bm-bal-btn active" onclick="setBaseBal(1, this)">1</button>
+                    <button class="bm-bal-btn" onclick="setBaseBal(10, this)">10</button>
+                    <button class="bm-bal-btn" onclick="setBaseBal(100, this)">100</button>
+                    <button class="bm-bal-btn" onclick="setBaseBal(1000, this)">1000</button>
+                </div>
+                <div class="bm-section-title">Number</div>
+                <div class="bm-qty-row">
+                    <div class="bm-qty-controls">
+                        <button class="bm-qty-btn" onclick="changeQty(-1)">-</button>
+                        <input type="number" id="betQtyInput" class="bm-qty-input" value="1" oninput="calculateTotal()">
+                        <button class="bm-qty-btn" onclick="changeQty(1)">+</button>
+                    </div>
+                </div>
+                <div class="bm-mult-grid">
+                    <button class="bm-mult-btn active" onclick="setMult(1, this)">X1</button>
+                    <button class="bm-mult-btn" onclick="setMult(5, this)">X5</button>
+                    <button class="bm-mult-btn" onclick="setMult(10, this)">X10</button>
+                    <button class="bm-mult-btn" onclick="setMult(20, this)">X20</button>
+                    <button class="bm-mult-btn" onclick="setMult(50, this)">X50</button>
+                    <button class="bm-mult-btn" onclick="setMult(100, this)">X100</button>
+                </div>
+                <div class="bm-rules-row">
+                    <input type="checkbox" checked id="agreeRules">
+                    <label for="agreeRules">I agree</label>
+                </div>
+            </div>
+            <div class="bm-footer">
+                <button class="bm-cancel-btn" onclick="closeBetModal()">Cancel</button>
+                <button class="bm-confirm-btn" id="bmConfirmBtn" onclick="confirmBet()">Total amount ₹1.00</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGameDuration = 30;
+        let timerInterval = null;
+        let walletBalance = 0.00;
+        let selectedBase = 1;
+        let gameHistoryList = [];
+        let myHistoryList = [];
+        let lastRecordedPeriod = null;
+        let currentPage = 1;
+        let currentHistType = 'game';
+        let isBettingClosed = false;
+        let currentSelectedOption = null;
+        let currentBetAmount = 0;
+        let activeUserBetForPeriod = null;
+        let resultAutoCloseTimer = null;
+        const itemsPerPage = 10;
+        let selectedDepositAmt = 100;
+        let selectedSubChannelName = 'QR-Umoney';
+        let qrTimerInterval = null;
+        let selectedWithdrawMethodName = 'BANK CARD';
+
+        function updateWalletDisplay() {
+            let formattedBal = "₹" + walletBalance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('walletBalance').textContent = formattedBal;
+            document.getElementById('depWalletBalance').textContent = formattedBal;
+        }
+
+        function loadWalletFromStorage() {
+            let savedBal = localStorage.getItem('wingo_wallet_balance');
+            if (savedBal !== null) {
+                walletBalance = parseFloat(savedBal) || 0;
+            } else {
+                walletBalance = 0.00;
+            }
+            updateWalletDisplay();
+        }
+
+        function saveWalletToStorage() {
+            localStorage.setItem('wingo_wallet_balance', walletBalance);
+            updateWalletDisplay();
+        }
+
+        function openWithdrawPage() {
+            document.getElementById('wdWalletBalance').innerHTML = "₹" + walletBalance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' <span style="font-size: 16px; cursor: pointer;" onclick="showToast(\'Balance synced\')">&#8635;</span>';
+            document.getElementById('withdrawPage').style.display = 'block';
+        }
+        function closeWithdrawPage() {
+            document.getElementById('withdrawPage').style.display = 'none';
+        }
+
+        function selectWithdrawMethod(methodName, el) {
+            document.querySelectorAll('.wd-method-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            selectedWithdrawMethodName = methodName;
+
+            let labelEl = document.getElementById('wdDynamicLabel');
+            let inputEl = document.getElementById('wdDynamicInput');
+
+            if (methodName === 'BANK CARD') {
+                labelEl.textContent = 'Bank Account Number';
+                inputEl.placeholder = 'Enter bank account number';
+            } else if (methodName === 'UPI') {
+                labelEl.textContent = 'UPI ID';
+                inputEl.placeholder = 'Enter UPI ID (e.g. username@ybl)';
+            } else if (methodName === 'USDT') {
+                labelEl.textContent = 'USDT Wallet Address';
+                inputEl.placeholder = 'Enter TRC20 wallet address';
+            }
+        }
+
+        function submitWithdraw() {
+            let amount = parseFloat(document.getElementById('wdAmountInput').value) || 0;
+            let detail = document.getElementById('wdDynamicInput').value.trim();
+
+            if (amount < 200) {
+                showToast("Minimum withdrawal amount is ₹200!");
+                return;
+            }
+            if (amount > walletBalance) {
+                showToast("Insufficient Balance!");
+                return;
+            }
+            if (!detail) {
+                showToast("Please fill out the account details!");
+                return;
+            }
+
+            walletBalance -= amount;
+            saveWalletToStorage();
+            showToast("Withdrawal Submitted Successfully!");
+            closeWithdrawPage();
+        }
+
+        function openDepositPage() {
+            updateWalletDisplay();
+            document.getElementById('depositPage').style.display = 'block';
+        }
+        function closeDepositPage() {
+            document.getElementById('depositPage').style.display = 'none';
+        }
+
+        function selectTopChannel(channelName, el) {
+            document.querySelectorAll('.dep-channel-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            
+            let subContainer = document.getElementById('subChannelsContainer');
+            if (channelName === 'Innate UPI-QR') {
+                subContainer.innerHTML = `
+                    <div class="sub-channel-card active" onclick="selectSubChannel('QR-Umoney', '100 - 10K', this)"><div class="sub-channel-name">QR-Umoney</div><div class="sub-channel-desc">Balance:100 - 10K</div></div>
+                    <div class="sub-channel-card" onclick="selectSubChannel('QR-YayaPay', '100 - 50K', this)"><div class="sub-channel-name">QR-YayaPay</div><div class="sub-channel-desc">Balance:100 - 50K</div></div>
+                `;
+                selectSubChannel('QR-Umoney', '100 - 10K', subContainer.children[0]);
+            } else if (channelName === 'Expert UPI-QR') {
+                subContainer.innerHTML = `
+                    <div class="sub-channel-card active" onclick="selectSubChannel('Umoney-QR', '100 - 10K', this)"><div class="sub-channel-name">Umoney-QR</div><div class="sub-channel-desc">Balance:100 - 10K</div></div>
+                    <div class="sub-channel-card" onclick="selectSubChannel('WPay-QR', '100 - 50K', this)"><div class="sub-channel-name">WPay-QR</div><div class="sub-channel-desc">Balance:100 - 50K</div></div>
+                `;
+                selectSubChannel('Umoney-QR', '100 - 10K', subContainer.children[0]);
+            } else if (channelName === 'PAYTM') {
+                subContainer.innerHTML = `
+                    <div class="sub-channel-card active" onclick="selectSubChannel('PAYTM-WePay', '100 - 50K', this)"><div class="sub-channel-name">PAYTM-WePay</div><div class="sub-channel-desc">Balance:100 - 50K</div></div>
+                    <div class="sub-channel-card" onclick="selectSubChannel('PAYTM-Umoney', '100 - 10K', this)"><div class="sub-channel-name">PAYTM-Umoney</div><div class="sub-channel-desc">Balance:100 - 10K</div></div>
+                `;
+                selectSubChannel('PAYTM-WePay', '100 - 50K', subContainer.children[0]);
+            } else {
+                subContainer.innerHTML = `
+                    <div class="sub-channel-card active" onclick="selectSubChannel('USDT-4', '10 - 50K', this)"><div class="sub-channel-name">USDT-4</div><div class="sub-channel-desc">Balance:10 - 50K</div></div>
+                `;
+                selectSubChannel('USDT-4', '10 - 50K', subContainer.children[0]);
+            }
+        }
+        function selectSubChannel(name, range, el) {
+            document.querySelectorAll('.sub-channel-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedSubChannelName = name;
+            document.getElementById('selectedRechargeMethodText').textContent = name;
+        }
+
+        function setDepositAmt(amount, el) {
+            selectedDepositAmt = amount;
+            document.querySelectorAll('.dep-amt-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('depCustomAmt').value = amount;
+            document.querySelector('.dep-submit-btn').textContent = "Deposit ₹" + amount.toFixed(2);
+        }
+
+        function manualDepositInput() {
+            let val = parseFloat(document.getElementById('depCustomAmt').value) || 0;
+            selectedDepositAmt = val;
+            document.querySelector('.dep-submit-btn').textContent = "Deposit ₹" + val.toFixed(2);
+        }
+
+        function submitDeposit() {
+            if (selectedDepositAmt <= 0) {
+                showToast("Please enter a valid amount!");
+                return;
+            }
+            closeDepositPage();
+            openQrGateway();
+        }
+
+        function openQrGateway() {
+            document.getElementById('utrInputNumber').value = '';
+            document.getElementById('qrGatewayPage').style.display = 'block';
+            generateUpiPayment(selectedDepositAmt);
+            startQrCountdown(8 * 60);
+        }
+
+        function closeQrGateway() {
+            document.getElementById('qrGatewayPage').style.display = 'none';
+            if (qrTimerInterval) clearInterval(qrTimerInterval);
+        }
+
+        function startQrCountdown(durationInSeconds) {
+            if (qrTimerInterval) clearInterval(qrTimerInterval);
+            let timer = durationInSeconds;
+            
+            qrTimerInterval = setInterval(function () {
+                let minutes = Math.floor(timer / 60);
+                let seconds = timer % 60;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                document.getElementById('qrTimerDisplay').textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(qrTimerInterval);
+                    showToast("Payment Time Expired!");
+                    closeQrGateway();
+                }
+            }, 1000);
+        }
+  function generateUpiPayment(selectedAmount) {
+            const upiId = "9691545693-5@ybl";
+            const name = "MY CLUB";
+            
+            if (selectedAmount < 100 || selectedAmount > 10000) {
+                alert("Amount 100 se 10,000 ke beech honi chahiye!");
+                return;
+            }
+
+            let amount = parseFloat(selectedAmount).toFixed(2);
+            selectedDepositAmt = parseFloat(selectedAmount);
+
+            const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+            let phonePeUrl = `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+            let paytmUrl = `paytmmp://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+            let gpayUrl = `tez://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+
+            document.getElementById("phonepe-btn").href = phonePeUrl;
+            document.getElementById("paytm-btn").href = paytmUrl;
+            document.getElementById("gpay-btn").href = gpayUrl;
+
+            document.getElementById("display-amount").innerText = "₹" + amount;
+
+            let qrImgElement = document.getElementById("dynamicQrImage");
+            qrImgElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiString)}`;
+        }
+
+        function submitUtrCode() {
+            let utr = document.getElementById('utrInputNumber').value.trim();
+            if (utr.length !== 12) {
+                showToast("Please enter a valid 12-digit UTR number!");
+                return;
+            }
+            walletBalance += selectedDepositAmt;
+            saveWalletToStorage();
+            showToast("Deposit Successful & Credited!");
+            closeQrGateway();
+        }
+
+        function loadHistoryFromStorage() {
+            let savedHistory = localStorage.getItem('wingo_game_history_' + currentGameDuration);
+            if (savedHistory) {
+                try { gameHistoryList = JSON.parse(savedHistory); } catch(e) { gameHistoryList = []; }
+            } else {
+                gameHistoryList = [];
+            }
+
+            let savedMyHistory = localStorage.getItem('wingo_my_history');
+            if (savedMyHistory) {
+                try { myHistoryList = JSON.parse(savedMyHistory); } catch(e) { myHistoryList = []; }
+            } else {
+                myHistoryList = [];
+            }
+        }
+
+        function saveHistoryToStorage() {
+            localStorage.setItem('wingo_game_history_' + currentGameDuration, JSON.stringify(gameHistoryList));
+            localStorage.setItem('wingo_my_history', JSON.stringify(myHistoryList));
+        }
+
+        function switchTab(duration, element) {
+            document.querySelectorAll('.timer-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            currentGameDuration = duration;
+            lastRecordedPeriod = null;
+            currentPage = 1;
+            
+            let titles = { 30: 'WinGo 30sec', 60: 'WinGo 1 Min', 180: 'WinGo 3 Min', 300: 'WinGo 5 Min' };
+            let titleText = titles[duration] || 'WinGo 30sec';
+            document.getElementById('gameTypeTitle').textContent = titleText;
+            document.getElementById('betModalSubTitle').textContent = titleText;
+            
+            loadHistoryFromStorage();
+            renderCurrentView();
+            updateTopResultBalls();
+            startTimer();
+        }
+        function switchHistTab(element, type) {
+            document.querySelectorAll('.hist-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            currentHistType = type;
+            currentPage = 1;
+            renderCurrentView();
+        }
+        function changePage(dir) {
+            let list = currentHistType === 'my' ? myHistoryList : gameHistoryList;
+            let totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+            currentPage += dir;
+            if(currentPage < 1) currentPage = 1;
+            if(currentPage > totalPages) currentPage = totalPages;
+            renderCurrentView();
+        }
+        function openBetModal(option, colorHex) {
+            if (isBettingClosed) {
+                showToast("Betting is closed for this round!");
+                return;
+            }
+            currentSelectedOption = option;
+            document.getElementById('betModalHeaderBg').style.background = colorHex;
+            document.getElementById('bmConfirmBtn').style.background = colorHex;
+            document.getElementById('betModalTitle').textContent = "Select " + (typeof option === 'number' ? option : option);
+            selectedBase = 1;
+            document.getElementById('betQtyInput').value = 1;
+            calculateTotal();
+            document.getElementById('betModalOverlay').style.display = 'flex';
+        }
+
+        function closeBetModal() {
+            document.getElementById('betModalOverlay').style.display = 'none';
+        }
+
+        function setBaseBal(val, el) {
+            selectedBase = val;
+            document.querySelectorAll('.bm-bal-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            calculateTotal();
+        }
+
+        function setMult(mult, el) {
+            document.getElementById('betQtyInput').value = mult;
+            document.querySelectorAll('.bm-mult-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            calculateTotal();
+        }
+
+        function changeQty(change) {
+            let input = document.getElementById('betQtyInput');
+            let val = parseInt(input.value) || 1;
+            val += change;
+            if(val < 1) val = 1;
+            input.value = val;
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let qty = parseInt(document.getElementById('betQtyInput').value) || 1;
+            currentBetAmount = selectedBase * qty;
+            document.getElementById('bmConfirmBtn').textContent = "Total amount ₹" + currentBetAmount.toFixed(2);
+        }
+
+        function confirmBet() {
+            if (isBettingClosed) {
+                showToast("Betting is closed!");
+                closeBetModal();
+                return;
+            }
+            if (walletBalance < currentBetAmount) {
+                showToast("Insufficient Balance!");
+                return;
+            }
+            walletBalance -= currentBetAmount;
+            saveWalletToStorage();
+            
+            let periodText = document.getElementById('periodDisplay').textContent;
+            activeUserBetForPeriod = { period: periodText, option: currentSelectedOption, amount: currentBetAmount };
+            
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = String(now.getMonth() + 1).padStart(2, '0');
+            let day = String(now.getDate()).padStart(2, '0');
+            let hours = String(now.getHours()).padStart(2, '0');
+            let mins = String(now.getMinutes()).padStart(2, '0');
+            let secs = String(now.getSeconds()).padStart(2, '0');
+            let formattedDateTime = `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
+
+            myHistoryList.unshift({
+                period: periodText,
+                datetime: formattedDateTime,
+                option: currentSelectedOption,
+                amount: currentBetAmount,
+                status: 'Pending',
+                resultAmount: '-' + currentBetAmount.toFixed(2)
+            });
+            saveHistoryToStorage();
+            closeBetModal();
+            showToast("Bet Success!");
+
+            if (currentHistType === 'my') {
+                renderCurrentView();
+            }
+        }
+
+        function showToast(message) {
+            let toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2000);
+        }
+
+        function showResultModalPopup(isWin, resultData, betObj, winAmt) {
+            let modal = document.getElementById('resultModalOverlay');
+            let box = document.getElementById('resultModalBox');
+            let wingIconContainer = document.getElementById('wingIconContainer');
+            let title = document.getElementById('resultModalTitle');
+            let badgesContainer = document.getElementById('rtBadgesContainer');
+            let stripHeading = document.getElementById('rtStripHeading');
+            let stripValue = document.getElementById('rtStripValue');
+            let periodVal = document.getElementById('rtPeriodVal');
+
+            badgesContainer.innerHTML = '';
+            let badgesHtml = '';
+            if (resultData.number === 0) {
+                badgesHtml = `<span class="rt-badge red">Red</span><span class="rt-badge violet">Violet</span><span class="rt-badge num">0</span><span class="rt-badge small">Small</span>`;
+            } else if (resultData.number === 5) {
+                badgesHtml = `<span class="rt-badge green">Green</span><span class="rt-badge violet">Violet</span><span class="rt-badge num">5</span><span class="rt-badge big">Big</span>`;
+            } else {
+                let colorClass = (resultData.number % 2 === 0) ? 'red' : 'green';
+                let colorName = (resultData.number % 2 === 0) ? 'Red' : 'Green';
+                badgesHtml = `<span class="rt-badge ${colorClass}">${colorName}</span><span class="rt-badge num">${resultData.number}</span><span class="rt-badge ${resultData.bigSmall.toLowerCase()}">${resultData.bigSmall}</span>`;
+            }
+            badgesContainer.innerHTML = badgesHtml;
+            periodVal.textContent = resultData.period;
+
+            if (isWin) {
+                box.className = "result-modal-box win";
+                title.textContent = "Congratulations";
+                stripHeading.textContent = "Bonus";
+                stripValue.textContent = "₹" + winAmt.toFixed(2);
+                stripValue.className = "rt-strip-value win-color";
+                wingIconContainer.innerHTML = `<svg viewBox="0 0 24 24" fill="#ff9f43"><path d="M13.13 22.19L11.5 18.36C11.31 17.91 11.22 17.43 11.22 16.94V13.5H7.06C6.35 13.5 5.72 13.06 5.47 12.39L2.11 3.5C1.84 2.8 2.31 2.06 3.03 2.06C3.36 2.06 3.67 2.25 3.82 2.55L7.28 9.5H11.22V5.56C11.22 4.64 11.96 3.91 12.89 3.91H16.44C17.36 3.91 18.09 4.64 18.09 5.56V9.5H22.05L25.51 2.55C25.66 2.25 25.97 2.06 26.3 2.06C27.02 2.06 27.49 2.8 27.22 3.5L23.86 12.39C23.61 13.06 22.98 13.5 22.27 13.5H18.12V16.94C18.12 17.43 18.03 17.91 17.84 18.36L16.21 22.19C15.89 22.95 14.83 22.95 14.51 22.19H13.13Z"/></svg>`;
+            } else {
+                box.className = "result-modal-box lose";
+                title.textContent = "Sorry";
+                stripHeading.textContent = "Lose";
+                stripValue.textContent = "₹" + betObj.amount.toFixed(2);
+                stripValue.className = "rt-strip-value lose-color";
+                wingIconContainer.innerHTML = `<svg viewBox="0 0 24 24" fill="#0984e3"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.99H19C18.47,16.11 15.72,19.78 12,20.92V12H5V6.3L12,3.19V11.99Z"/></svg>`;
+            }
+            modal.style.display = "flex";
+            if (resultAutoCloseTimer) clearTimeout(resultAutoCloseTimer);
+            resultAutoCloseTimer = setTimeout(() => {
+                closeResultModal();
+            }, 3000);
+        }
+     function closeResultModal() {
+            document.getElementById('resultModalOverlay').style.display = "none";
+        }
+
+        function getBallStyle(num) {
+            if (num === 0) return { bg: 'ball-bg-violet-red' };
+            if (num === 5) return { bg: 'ball-bg-green-violet' };
+            if (num % 2 === 0) return { bg: 'ball-bg-red' };
+            return { bg: 'ball-bg-green' };
+        }
+
+        function getTableNumClass(num) {
+            if (num === 0) return 'table-num-violet-red';
+            if (num === 5) return 'table-num-green-violet';
+            if (num % 2 === 0) return 'table-num-red';
+            return 'table-num-green';
+        }
+        function getColorDots(num) {
+            if (num === 0) return '<div class="color-dot-container"><span class="color-dot dot-red"></span><span class="color-dot dot-violet"></span></div>';
+            if (num === 5) return '<div class="color-dot-container"><span class="color-dot dot-green"></span><span class="color-dot dot-violet"></span></div>';
+            if (num % 2 === 0) return '<div class="color-dot-container"><span class="color-dot dot-red"></span></div>';
+            return '<div class="color-dot-container"><span class="color-dot dot-green"></span></div>';
+        }
+        function updateTopResultBalls() {
+            let container = document.getElementById('topResultBalls');
+            container.innerHTML = '';
+            
+            let recentItems = gameHistoryList.slice(0, 5);
+            if (recentItems.length === 0) {
+                recentItems = [
+                    { number: 5, ...getBallStyle(5) },
+                    { number: 6, ...getBallStyle(6) },
+                    { number: 2, ...getBallStyle(2) },
+                    { number: 8, ...getBallStyle(8) },
+                    { number: 9, ...getBallStyle(9) }
+                ];
+            }
+            recentItems.forEach(item => {
+                let style = getBallStyle(item.number);
+                let ball = document.createElement('div');
+                ball.className = `res-ball ${style.bg}`;
+                ball.innerHTML = `
+                    <span class="side-dot-left"></span>
+                    <span class="side-dot-right"></span>
+                    <div class="res-inner">${item.number}</div>
+                `;
+                container.appendChild(ball);
+            });
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            function update() {
+                let now = new Date();
+                let totalSeconds = Math.floor(now.getTime() / 1000);
+                let secondsRem = currentGameDuration - (totalSeconds % currentGameDuration);
+                
+                let m = Math.floor(secondsRem / 60);
+                let s = secondsRem % 60;
+
+                let mStr = String(m).padStart(2, '0');
+                document.getElementById('m1').textContent = mStr[0];
+                document.getElementById('m2').textContent = mStr[1];
+                document.getElementById('s1').textContent = String(s).padStart(2, '0')[0];
+                document.getElementById('s2').textContent = String(s).padStart(2, '0')[1];
+
+                let overlay = document.getElementById('countdownOverlay');
+                if (secondsRem >= 1 && secondsRem <= 5) {
+                    isBettingClosed = true;
+                    overlay.style.display = 'flex';
+                    let formattedSec = String(secondsRem).padStart(2, '0');
+                    document.getElementById('cdDigit1').textContent = formattedSec[0];
+                    document.getElementById('cdDigit2').textContent = formattedSec[1];
+                    
+                    let modal = document.getElementById('betModalOverlay');
+                    if (modal.style.display === 'flex') {
+                        closeBetModal();
+                        showToast("Betting closed for this round!");
+                    }
+                } else {
+                    isBettingClosed = false;
+                    overlay.style.display = 'none';
+                }
+
+                let utcNow = new Date();
+                let year = utcNow.getUTCFullYear();
+                let month = String(utcNow.getUTCMonth() + 1).padStart(2, '0');
+                let day = String(utcNow.getUTCDate()).padStart(2, '0');
+                let dateStr = year + month + day;
+
+                let utcMidnight = Date.UTC(year, utcNow.getUTCMonth(), utcNow.getUTCDate()) / 1000;
+                let secondsSinceUTCStart = totalSeconds - utcMidnight;
+                let periodIndex = Math.floor(secondsSinceUTCStart / currentGameDuration) + 1;
+                
+                let prefixMap = { 30: '1000504', 60: '1000102', 180: '1000200', 300: '1000300' };
+                let typePrefix = prefixMap[currentGameDuration] || '1000504';
+                
+                let livePeriodNumber = dateStr + typePrefix + String(periodIndex).padStart(4, '0');
+                document.getElementById('periodDisplay').textContent = livePeriodNumber;
+
+                let previousPeriodIndex = periodIndex - 1;
+                let previousPeriodNumber = dateStr + typePrefix + String(previousPeriodIndex).padStart(4, '0');
+
+                if (previousPeriodNumber !== lastRecordedPeriod && previousPeriodIndex > 0) {
+                    lastRecordedPeriod = previousPeriodNumber;
+                    
+                    let exists = gameHistoryList.some(item => item.period === previousPeriodNumber);
+                    if (!exists) {
+                        // --- LOWEST AMOUNT BALANCING LOGIC ---
+                        // Tally totals for Big/Small & Green/Red from active user history or simulate based on prompt criteria
+                        let totalBig = 0;
+                        let totalSmall = 0;
+                        let totalGreen = 0;
+                        let totalRed = 0;
+
+                        myHistoryList.forEach(b => {
+                            if (b.period === previousPeriodNumber) {
+                                if (b.option === 'Big') totalBig += b.amount;
+                                if (b.option === 'Small') totalSmall += b.amount;
+                                if (b.option === 'Green') totalGreen += b.amount;
+                                if (b.option === 'Red') totalRed += b.amount;
+                            }
+                        });
+
+                        // If no specific bets exist for this period, fallback to simulated amounts or randomized choice
+                        if (totalBig === 0 && totalSmall === 0) {
+                            totalBig = Math.floor(Math.random() * 50000) + 50000;
+                            totalSmall = Math.floor(Math.random() * 50000) + 50000;
+                        }
+                        if (totalGreen === 0 && totalRed === 0) {
+                            totalGreen = Math.floor(Math.random() * 50000) + 50000;
+                            totalRed = Math.floor(Math.random() * 50000) + 50000;
+                        }
+
+                        // Pick the side with the LOWER amount
+                        let chosenBigSmall = totalSmall <= totalBig ? 'Small' : 'Big';
+                        let chosenColor = totalGreen <= totalRed ? 'Green' : 'Red';
+
+                        // Map chosen side to a valid result number (0-9)
+                        let matchingNumbers = [];
+                        for (let n = 0; n <= 9; n++) {
+                            let bs = n >= 5 ? 'Big' : 'Small';
+                            let col = (n === 1 || n === 3 || n === 7 || n === 9 || n === 5) ? 'Green' : ((n === 2 || n === 4 || n === 6 || n === 8 || n === 0) ? 'Red' : 'Violet');
+                            
+                            // Match both criteria or fallback smoothly
+                            if (bs === chosenBigSmall && (col === chosenColor || col === 'Violet')) {
+                                matchingNumbers.push(n);
+                            }
+                        }
+
+                        if (matchingNumbers.length === 0) {
+                            for (let n = 0; n <= 9; n++) {
+                                let bs = n >= 5 ? 'Big' : 'Small';
+                                if (bs === chosenBigSmall) matchingNumbers.push(n);
+                            }
+                        }
+
+                        let randNum = matchingNumbers[Math.floor(Math.random() * matchingNumbers.length)] ?? Math.floor(Math.random() * 10);
+                        let bigSmall = randNum >= 5 ? 'Big' : 'Small';
+                        // ---------------------------------------
+
+                        let newRecord = {
+                            period: previousPeriodNumber,
+                            number: randNum,
+                            bigSmall: bigSmall,
+                            numClass: getTableNumClass(randNum),
+                            dots: getColorDots(randNum)
+                        };
+                        gameHistoryList.unshift(newRecord);
+                        if(gameHistoryList.length > 50) gameHistoryList.pop();
+
+                        myHistoryList.forEach(bet => {
+                            if (bet.period === previousPeriodNumber && bet.status === 'Pending') {
+                                let isWin = false;
+                                if (bet.option === 'Big' && randNum >= 5) isWin = true;
+                                else if (bet.option === 'Small' && randNum < 5) isWin = true;
+                                else if (bet.option === 'Green' && (randNum === 1 || randNum === 3 || randNum === 7 || randNum === 9 || randNum === 5)) isWin = true;
+                                else if (bet.option === 'Red' && (randNum === 2 || randNum === 4 || randNum === 6 || randNum === 8 || randNum === 0)) isWin = true;
+                                else if (bet.option === 'Violet' && (randNum === 0 || randNum === 5)) isWin = true;
+                                else if (typeof bet.option === 'number' && bet.option === randNum) isWin = true;
+                                else if (typeof bet.option === 'string' && !isNaN(bet.option) && Number(bet.option) === randNum) isWin = true;
+
+                                let finalWinAmt = 0;
+                                if (isWin) {
+                                    bet.status = 'Succeed';
+                                    
+                                    let isNumberBet = (typeof bet.option === 'number') || (!isNaN(bet.option) && bet.option !== '');
+                                    if (isNumberBet) {
+                                        let grossWinning = bet.amount * 9;
+                                        let taxDeduction = grossWinning * 0.02;
+                                        finalWinAmt = grossWinning - taxDeduction;
+                                    } else {
+                                        finalWinAmt = bet.amount * 1.96;
+                                    }
+
+                                    walletBalance += finalWinAmt;
+                                    bet.resultAmount = '+' + finalWinAmt.toFixed(2);
+                                } else {
+                                    bet.status = 'Failed';
+                                    bet.resultAmount = '-' + bet.amount.toFixed(2);
+                                }
+
+                                if (activeUserBetForPeriod && activeUserBetForPeriod.period === previousPeriodNumber) {
+                                    showResultModalPopup(isWin, newRecord, activeUserBetForPeriod, isWin ? finalWinAmt : 0);
+                                    activeUserBetForPeriod = null;
+                                }
+                            }
+                        });
+                        saveHistoryToStorage();
+                        saveWalletToStorage();
+                        renderCurrentView();
+                        updateTopResultBalls();
+                    }
+                }
+            }
+      update();
+            timerInterval = setInterval(update, 1000);
+        }
+
+        function renderCurrentView() {
+            let container = document.getElementById('historySectionContainer');
+            
+            if (currentHistType === 'game') {
+                let list = gameHistoryList;
+                let totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+                if(currentPage > totalPages) currentPage = totalPages;
+                if(currentPage < 1) currentPage = 1;
+
+                let start = (currentPage - 1) * itemsPerPage;
+                let end = start + itemsPerPage;
+                let paginatedItems = list.slice(start, end);
+                
+                let rowsHtml = '';
+                paginatedItems.forEach(item => {
+                    rowsHtml += `
+                        <tr>
+                            <td>${item.period}</td>
+                            <td><span class="${item.numClass}">${item.number}</span></td>
+                            <td><span class="table-bs">${item.bigSmall}</span></td>
+                            <td>${item.dots}</td>
+                        </tr>
+                    `;
+                });
+                container.innerHTML = `
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Number</th>
+                                    <th>Big Small</th>
+                                    <th>Color</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-bar" style="display: flex; justify-content: space-between; align-items: center; background: #3d0d21; padding: 10px 15px; border-radius: 8px; border: 1px solid #9c3661;">
+                        <button class="pg-btn" onclick="changePage(-1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&lt;</button>
+                        <div class="pg-info" id="pageInfo" style="font-size: 14px; font-weight: bold; color: #ddd;">${currentPage}/${totalPages}</div>
+                        <button class="pg-btn" onclick="changePage(1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&gt;</button>
+                    </div>
+                `;
+            } else if (currentHistType === 'chart') {
+                let list = gameHistoryList;
+                let totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+                if(currentPage > totalPages) currentPage = totalPages;
+                if(currentPage < 1) currentPage = 1;
+
+                let start = (currentPage - 1) * itemsPerPage;
+                let end = start + itemsPerPage;
+                let paginatedItems = list.slice(start, end);
+
+                let winningNumsCircles = '';
+                for(let i=0; i<=9; i++) {
+                    winningNumsCircles += `<div class="stat-num-circle">${i}</div>`;
+                }
+                let trendRowsHtml = '';
+                if (paginatedItems.length === 0) {
+                    trendRowsHtml = `<div style="text-align: center; padding: 30px; color: #aaa; font-size: 14px;">No chart data available</div>`;
+                } else {
+                    paginatedItems.forEach(item => {
+                        let shortPeriod = item.period.slice(-5);
+                        let numNodesHtml = '';
+                        for(let i=0; i<=9; i++) {
+                            if (i === item.number) {
+                                let colorClass = 'red';
+                                if (i === 1 || i === 3 || i === 7 || i === 9 || i === 5) colorClass = 'green';
+                                if (i === 0 || i === 5) colorClass = 'violet';
+                                numNodesHtml += `<div class="chart-ball-node winning ${colorClass}">${i}</div>`;
+                            } else {
+                                numNodesHtml += `<div class="chart-ball-node">${i}</div>`;
+                            }
+                        }
+                        let bsClass = item.bigSmall === 'Big' ? 'big' : 'small';
+
+                        trendRowsHtml += `
+                            <div class="chart-trend-row">
+                                <div class="chart-trend-period">${shortPeriod}</div>
+                                <div class="chart-trend-numbers">${numNodesHtml}</div>
+                                <div class="chart-bs-badge ${bsClass}">${item.bigSmall[0]}</div>
+                            </div>
+                        `;
+                    });
+                }
+                container.innerHTML = `
+                    <div class="chart-stats-box">
+                        <div class="chart-stats-header">
+                            <span>Statistic (last 100 Periods)</span>
+                        </div>
+                        <div class="chart-stat-row">
+                            <div class="chart-stat-label">Winning Numbers</div>
+                            <div class="chart-stat-values">${winningNumsCircles}</div>
+                        </div>
+                        <div class="chart-stat-row">
+                            <div class="chart-stat-label">Missing</div>
+                            <div class="chart-stat-values" style="font-size:12px; color:#aaa; justify-content:space-around; width:100%;"><span>15</span><span>1</span><span>12</span><span>0</span><span>6</span><span>7</span><span>8</span><span>3</span><span>10</span><span>2</span></div>
+                        </div>
+                        <div class="chart-stat-row">
+                            <div class="chart-stat-label">Avg missing</div>
+                            <div class="chart-stat-values" style="font-size:12px; color:#aaa; justify-content:space-around; width:100%;"><span>5</span><span>5</span><span>10</span><span>10</span><span>10</span><span>9</span><span>11</span><span>6</span><span>6</span><span>13</span></div>
+                        </div>
+                        <div class="chart-stat-row">
+                            <div class="chart-stat-label">Frequency</div>
+                            <div class="chart-stat-values" style="font-size:12px; color:#aaa; justify-content:space-around; width:100%;"><span>14</span><span>15</span><span>8</span><span>8</span><span>8</span><span>9</span><span>7</span><span>13</span><span>12</span><span>6</span></div>
+                        </div>
+                        <div class="chart-stat-row" style="border:none;">
+                            <div class="chart-stat-label">Max consecutive</div>
+                            <div class="chart-stat-values" style="font-size:12px; color:#aaa; justify-content:space-around; width:100%;"><span>3</span><span>3</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span><span>2</span></div>
+                        </div>
+                    </div>
+                    <div class="chart-stats-box">
+                        <div style="background:#3d0d21; padding:10px 15px; font-size:14px; font-weight:bold; color:#aaa; border-bottom:1px solid #9c3661; display:flex; justify-content:space-between;">
+                            <span>Period</span>
+                            <span>Number</span>
+                        </div>
+                        ${trendRowsHtml}
+                    </div>
+                    <div class="pagination-bar" style="display: flex; justify-content: space-between; align-items: center; background: #3d0d21; padding: 10px 15px; border-radius: 8px; border: 1px solid #9c3661; margin-bottom: 15px;">
+                        <button class="pg-btn" onclick="changePage(-1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&lt;</button>
+                        <div class="pg-info" id="pageInfo" style="font-size: 14px; font-weight: bold; color: #ddd;">${currentPage}/${totalPages}</div>
+                        <button class="pg-btn" onclick="changePage(1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&gt;</button>
+                    </div>
+                `;
+            } else if (currentHistType === 'my') {
+                let list = myHistoryList;
+                let totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+                if(currentPage > totalPages) currentPage = totalPages;
+                if(currentPage < 1) currentPage = 1;
+
+                let start = (currentPage - 1) * itemsPerPage;
+                let end = start + itemsPerPage;
+                let paginatedItems = list.slice(start, end);
+
+                let cardsHtml = '';
+                if (paginatedItems.length === 0) {
+                    cardsHtml = `<div style="text-align: center; padding: 30px; color: #aaa; font-size: 14px;">No history available</div>`;
+                } else {
+                    paginatedItems.forEach(item => {
+                        let badgeClass = 'big';
+                        if (item.option === 'Small') badgeClass = 'small';
+                        else if (item.option === 'Green') badgeClass = 'green';
+                        else if (item.option === 'Red') badgeClass = 'red';
+                        else if (item.option === 'Violet') badgeClass = 'violet';
+                        else if (typeof item.option === 'number' || (!isNaN(item.option) && item.option !== '')) badgeClass = 'num';
+
+                        let statusClass = 'status-pending';
+                        if (item.status === 'Succeed') statusClass = 'status-succeed';
+                        else if (item.status === 'Failed') statusClass = 'status-failed';
+
+                        let amtClass = item.status === 'Succeed' ? 'pos' : (item.status === 'Failed' ? 'neg' : '');
+
+                        cardsHtml += `
+                            <div class="my-hist-card">
+                                <div class="my-hist-left">
+                                    <div class="my-badge ${badgeClass}">${item.option}</div>
+                                    <div class="my-info-col">
+                                        <div>${item.period}</div>
+                                        <div>${item.datetime}</div>
+                                    </div>
+                                </div>
+                                <div class="my-hist-right">
+                                    <div class="my-status ${statusClass}">${item.status}</div>
+                                    <div class="my-amount ${amtClass}">${item.resultAmount}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                container.innerHTML = `
+                    <div class="history-table-container" style="background: #3d0d21;">
+                        ${cardsHtml}
+                    </div>
+                    <div class="pagination-bar" style="display: flex; justify-content: space-between; align-items: center; background: #3d0d21; padding: 10px 15px; border-radius: 8px; border: 1px solid #9c3661;">
+                        <button class="pg-btn" onclick="changePage(-1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&lt;</button>
+                        <div class="pg-info" id="pageInfo" style="font-size: 14px; font-weight: bold; color: #ddd;">${currentPage}/${totalPages}</div>
+                        <button class="pg-btn" onclick="changePage(1)" style="background: #7a264a; border: 1px solid #9c3661; color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer;">&gt;</button>
+                    </div>
+                `;
+            }
+        }
+
+function loadWalletFromStorage() {
+    let currentUser = localStorage.getItem('currentLoggedInPhone');
+    let users = JSON.parse(localStorage.getItem('myClubUsers')) || {};
+    
+    let currentBalance = 0.00;
+    
+    if (currentUser && users[currentUser]) {
+        currentBalance = users[currentUser].balance;
+    }
+    
+    let el = document.getElementById('walletBal');
+    if (el) {
+        el.innerText = `₹${currentBalance.toFixed(2)}`;
+    }
+}
+
+        window.onload = function() { 
+            loadWalletFromStorage();
+            loadHistoryFromStorage();
+            updateTopResultBalls();
+            renderCurrentView();
+            startTimer(); 
+        };
+    </script>
+</body>
+</html>

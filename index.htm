@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'home.html';
+        }
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY CLUB</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* POORI WEBSITE KA MAIN BACKGROUND ORANGE (KESARIYA) KAR DIYA GAYA HAI */
+body {
+    background: linear-gradient(135deg, #b3476b, #591d35);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+        
+        /* Top Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(0, 0, 0, 0.3); border-bottom: 2px solid #ffcc00; }
+        .balance-box { background: rgba(0, 0, 0, 0.3); padding: 5px 14px; border-radius: 20px; font-size: 14px; color: #ffdf73; font-weight: bold; border: 1px solid #ffcc00; }
+        .logo { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); letter-spacing: 1.5px; }
+        .header-right { display: flex; gap: 10px; align-items: center; }
+        .lang-btn { background: rgba(0, 0, 0, 0.3); color: #ffcc00; border: 1px solid #ffcc00; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+.banner-slider-container {
+    width: 100%;
+    max-width: 100%;
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    background: #222;
+}
+
+.banner-track {
+    display: flex;
+    width: 800%;
+    height: 100%;
+    animation: slideAnimation 40s infinite linear;
+}
+
+.banner-slide {
+    width: 12.5%;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.banner-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+@keyframes slideAnimation {
+    0% { transform: translateX(0%); }
+    10% { transform: translateX(0%); }
+    12.5% { transform: translateX(-12.5%); }
+    22.5% { transform: translateX(-12.5%); }
+    25% { transform: translateX(-25%); }
+    35% { transform: translateX(-25%); }
+    37.5% { transform: translateX(-37.5%); }
+    47.5% { transform: translateX(-37.5%); }
+    50% { transform: translateX(-50%); }
+    60% { transform: translateX(-50%); }
+    62.5% { transform: translateX(-62.5%); }
+    72.5% { transform: translateX(-62.5%); }
+    75% { transform: translateX(-75%); }
+    85% { transform: translateX(-75%); }
+    87.5% { transform: translateX(-87.5%); }
+    97.5% { transform: translateX(-87.5%); }
+    100% { transform: translateX(0%); }
+}
+
+        /* Notice Bar */
+        .notice { background: rgba(0, 0, 0, 0.25); margin: 0 12px; padding: 10px 12px; border-radius: 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ffcc00; color: #fff; }
+        .notice button { background: #ff3300; border: none; color: #fff; padding: 5px 14px; border-radius: 15px; font-weight: bold; font-size: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+        /* Category Tabs */
+        .categories { display: flex; gap: 10px; padding: 12px; overflow-x: auto; }
+        .cat-btn { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 9px 18px; border-radius: 22px; font-size: 13px; font-weight: bold; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+        .cat-btn.active { background: #ff3300; color: #fff; border: 1px solid #ffcc00; }
+
+        /* Section Title */
+        .section-title { padding: 0 15px; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; color: #fff; display: flex; justify-content: space-between; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .section-title span { font-size: 12px; color: #ffcc00; }
+
+        /* Game Grid */
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 12px; }
+        .game-card { background: rgba(0, 0, 0, 0.3); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,204,0,0.5); text-align: center; padding-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .game-card div.img-box { height: 155px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); background: linear-gradient(135deg, #ff9933, #e65c00); color: #fff; border-bottom: 1px solid rgba(255,204,0,0.4); }
+        .game-card p { font-size: 12px; font-weight: bold; margin-top: 6px; color: #fff; }
+
+        /* Leaderboard Section */
+        .leaderboard-container { background: rgba(0, 0, 0, 0.3); margin: 20px 12px; border-radius: 14px; padding: 18px; border: 2px solid #ffcc00; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        .lb-title { text-align: center; color: #ffcc00; font-size: 18px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .lb-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 12px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); }
+        .lb-rank { font-weight: bold; color: #ffcc00; width: 30px; font-size: 14px; }
+        .lb-name { flex: 1; color: #fff; margin-left: 10px; font-weight: 600; }
+        .lb-prize { color: #00ff66; font-weight: bold; font-size: 14px; }
+
+        /* Providers Section */
+        .provider-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 12px; margin-top: 15px; }
+        .provider-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,204,0,0.6); border-radius: 10px; text-align: center; padding: 18px 0; font-weight: 900; font-size: 17px; color: #ffcc00; letter-spacing: 1.5px; box-shadow: inset 0 0 12px rgba(0,0,0,0.3); }
+
+        /* Footer Info */
+        .footer-info { padding: 18px; font-size: 11px; color: #fff; text-align: center; line-height: 1.6; background: rgba(0, 0, 0, 0.4); margin-top: 25px; border-top: 2px solid #ffcc00; }
+
+        /* Bottom Nav Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #993300; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid #ffcc00; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.4); }
+        .nav-item { text-align: center; color: #ffcc99; font-size: 11px; text-decoration: none; font-weight: bold; }
+        .nav-item.active { color: #ffcc00; text-shadow: 0 0 8px rgba(255,204,0,0.8); }
+        .nav-item div { font-size: 20px; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <div class="header">
+     <div class="balance-box" id="walletBal">₹0.00</div>
+        <div class="logo">MY CLUB</div>
+        <div class="header-right">
+            <span style="font-size: 18px;">📥</span>
+            <span class="lang-btn">🇺🇸 EN</span>
+        </div>
+    </div>
+
+<!-- Banner Slider Section -->
+<div class="banner-slider-container">
+    <div class="banner-track" id="bannerTrack">
+        <div class="banner-slide"><img src="banner1.jpg" alt="Banner 1"></div>
+        <div class="banner-slide"><img src="banner2.jpg" alt="Banner 2"></div>
+        <div class="banner-slide"><img src="banner3.jpg" alt="Banner 3"></div>
+        <div class="banner-slide"><img src="banner4.jpg" alt="Banner 4"></div>
+        <div class="banner-slide"><img src="banner5.jpg" alt="Banner 5"></div>
+        <div class="banner-slide"><img src="banner6.jpg" alt="Banner 6"></div>
+        <div class="banner-slide"><img src="banner7.jpg" alt="Banner 7"></div>
+        <div class="banner-slide"><img src="banner8.jpg" alt="Banner 8"></div>
+    </div>
+</div>
+
+    <!-- Notice -->
+    <div class="notice">
+        <span>📢 Welcome to join the Myclub platform...</span>
+        <button>Detail</button>
+    </div>
+
+    <!-- Category Tabs -->
+<div class="categories">
+    <div class="cat-btn active" onclick="switchTab('popular')">🔥 Popular</div>
+    <div class="cat-btn" onclick="switchTab('lottery')">🎱 Lottery</div>
+    <div class="cat-btn" onclick="switchTab('mini')">🚀 Mini games</div>
+</div>
+
+    <!-- Popular Section (12 Games) -->
+<div id="popular-games">
+    <div class="section-title">Popular Games (12) <span>ALL ></span></div>
+    <div class="game-grid">
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="aviator.jpg" alt="Aviator" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=400';">
+            </div>
+            <p>AVIATOR</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="jetx.jpg" alt="JetX" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>JETX</p>
+        </div>
+   <a href="wingo.html" style="text-decoration: none; color: inherit;">
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="wingo.jpg" alt="Wingo" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>WINGO</p>
+        </div>
+
+       </a>
+
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="cricket.jpg" alt="Cricket" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>CRICKET</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="pubg.jpg" alt="PUBG" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>PUBG 1MIN</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="kraken.jpg" alt="Kraken" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>POWER KRAKEN</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="money.jpg" alt="Money Coming" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>MONEY COMING</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none;">
+                <img src="fortune2.jpg" alt="Fortune Gems 2" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+            </div>
+            <p>FORTUNE GEMS 2</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
+                <img src="fortune.jpg" alt="Fortune Gems" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <p>FORTUNE GEMS</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
+                <img src="hotspin.jpg" alt="Hot Spin" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <p>HOT SPIN</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
+                <img src="crazy777.jpg" alt="Crazy 777" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <p>CRAZY 777</p>
+        </div>
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
+                <img src="wildfire.jpg" alt="Wildfire" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <p>WILDFIRE WINS</p>
+        </div>
+
+    </div>
+</div> <!-- Yeh popular-games ko close kar raha hai -->
+
+<!-- Lottery Section (Hidden by default) -->
+<div id="lottery-games" style="display: none;">
+    <div class="section-title">Lottery Games <span>ALL ></span></div>
+    <div class="game-grid">
+        <div class="game-card">
+            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
+                <img src="wingo.jpg" alt="Win Go" style="width:100%; height:100%; object-fit:cover; display:block;">
+        </div>
+            <p>WIN GO</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- Leaderboard Section -->
+<div class="leaderboard-container">
+    <div class="lb-title">🏆 Winning Leaderboard</div>
+    
+    <div class="lb-item">
+        <span class="lb-rank">01</span>
+        <span class="lb-name">Mem***QAY</span>
+        <span class="lb-prize">₹263,480,833</span>
+    </div>
+    
+    <div class="lb-item">
+        <span class="lb-rank">02</span>
+        <span class="lb-name">Mem***PTN</span>
+        <span class="lb-prize">₹39,444,020</span>
+    </div>
+    
+    <div class="lb-item">
+        <span class="lb-rank">03</span>
+        <span class="lb-name">Mem***S4N</span>
+        <span class="lb-prize">₹1,323,000</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">04</span>
+        <span class="lb-name">Mem***6J8</span>
+        <span class="lb-prize">₹1,151,409</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">05</span>
+        <span class="lb-name">Mem***DTO</span>
+        <span class="lb-prize">₹616,104</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">06</span>
+        <span class="lb-name">Mem***CVS</span>
+        <span class="lb-prize">₹500,977</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">07</span>
+        <span class="lb-name">Mem***Me</span>
+        <span class="lb-prize">₹347,202</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">08</span>
+        <span class="lb-name">Mem***D1E</span>
+        <span class="lb-prize">₹317,312</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">09</span>
+        <span class="lb-name">Mem***MXT</span>
+        <span class="lb-prize">₹313,863</span>
+    </div>
+
+    <div class="lb-item">
+        <span class="lb-rank">10</span>
+        <span class="lb-name">Mem***6U0</span>
+        <span class="lb-prize">₹298,521</span>
+    </div>
+
+</div> <!-- Yeh div ab sabhi 10 items ke baad band hoga, taaki sab us orange box ke andar rahein -->
+
+    <!-- Providers Section -->
+    <div class="section-title">Game Providers</div>
+    <div class="provider-grid">
+        <div class="provider-card">PG</div>
+        <div class="provider-card">JDB</div>
+        <div class="provider-card">JILI</div>
+        <div class="provider-card">TB</div>
+        <div class="provider-card">YGGDRASIL</div>
+        <div class="provider-card">Evo</div>
+        <div class="provider-card">CQ9</div>
+        <div class="provider-card">SG</div>
+        <div class="provider-card">PP</div>
+    </div>
+
+    <!-- Footer Description -->
+    <div class="footer-info">
+        <p>The platform advocates fairness, justice, and openness, mainly operate fair lottery, blockchain games, and casino slot machine games.</p>
+        <p style="margin-top: 8px; color: #ffcc00; font-weight: bold;">Gambling can be addictive, please play rationally. 18+</p>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <div>🏠</div> Home
+        </a>
+        <a href="#" class="nav-item">
+            <div>🎁</div> Activity
+        </a>
+        <a href="#" class="nav-item" style="color: #ffcc00;">
+            <div>💎</div> Promotion
+        </a>
+        <a href="#" class="nav-item">
+            <div>👛</div> Wallet
+        </a>
+        <a href="#" class="nav-item">
+            <div>👤</div> Account
+        </a>
+    </div>
+
+<script>
+window.addEventListener('pageshow', loadExactBalance);
+window.addEventListener('DOMContentLoaded', loadExactBalance);
+
+function loadExactBalance() {
+    let exactBal = 0.00;
+    
+    // Sare localStorage keys ko loop karke balance dhoondhein
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let val = localStorage.getItem(key);
+        
+        // Agar value number hai aur 0 se badi hai (aur 10 lakh se kam hai)
+        if (val !== null && !isNaN(val) && Number(val) > 0 && Number(val) < 1000000) {
+            let lowerKey = key.toLowerCase();
+            if (lowerKey.includes('bal') || lowerKey.includes('wallet') || lowerKey.includes('amount')) {
+                exactBal = Number(val);
+                break;
+            }
+        }
+    }
+    
+    // Agar upar na mile toh koi bhi valid number jo 100 se bada ho
+    if (exactBal === 0) {
+        for (let i = 0; i < localStorage.length; i++) {
+            let val = localStorage.getItem(localStorage.key(i));
+            if (val !== null && !isNaN(val) && Number(val) > 100 && Number(val) < 1000000) {
+                exactBal = Number(val);
+                break;
+            }
+        }
+    }
+
+    let el = document.getElementById('walletBal');
+    if (el) {
+        el.innerText = '₹' + exactBal.toFixed(2);
+    }
+}
+
+</script>
+
+</body>
+</html>
+
