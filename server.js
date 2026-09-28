@@ -1,7 +1,6 @@
 
 const express = require('express');
 const https = require('https');
-const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 app.use(express.json());
