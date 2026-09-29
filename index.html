@@ -1,385 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="google-site-verification" content="jugjBM1wKgpMHlsYxBcl-XQ2rdGTK6nXF3xZ0iC_TvY" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY CLUB</title>
+    <title>MY CLUB - Log in & Register</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        /* POORI WEBSITE KA MAIN BACKGROUND ORANGE (KESARIYA) KAR DIYA GAYA HAI */
-body {
-    background: linear-gradient(135deg, #b3476b, #591d35);
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         
-        /* Top Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(0, 0, 0, 0.3); border-bottom: 2px solid #ffcc00; }
-        .balance-box { background: rgba(0, 0, 0, 0.3); padding: 5px 14px; border-radius: 20px; font-size: 14px; color: #ffdf73; font-weight: bold; border: 1px solid #ffcc00; }
-        .logo { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); letter-spacing: 1.5px; }
-        .header-right { display: flex; gap: 10px; align-items: center; }
-        .lang-btn { background: rgba(0, 0, 0, 0.3); color: #ffcc00; border: 1px solid #ffcc00; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        /* Poori screen ka background gulabi/maroon gradient */
+        body { 
+            background: linear-gradient(135deg, #8e355f, #5a1833, #320d1c); 
+            color: #fff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* Top Gradient Header */
+        .top-header { background: linear-gradient(135deg, #ff416c, #ff4b2b, #d946ef); padding: 35px 20px; color: #fff; }
+        .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo-text { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+        .lang-box { background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 15px; font-size: 13px; }
+        
+        .header-title { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        .header-desc { font-size: 14px; color: rgba(255,255,255,0.85); }
 
-.banner-slider-container {
-    width: 100%;
-    max-width: 100%;
-    height: 160px;
-    overflow: hidden;
-    position: relative;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    background: #222;
-}
+        /* Main Form Container */
+        .main-container { padding: 35px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .form-content-area { flex: 1; }
 
-.banner-track {
-    display: flex;
-    width: 800%;
-    height: 100%;
-    animation: slideAnimation 40s infinite linear;
-}
+        /* Tabs style */
+        .tab-container { display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.25); border-radius: 10px; margin-bottom: 30px; padding: 6px; }
+        .tab-item { flex: 1; text-align: center; padding: 14px; font-size: 15px; font-weight: bold; color: #d1b5c4; cursor: pointer; border-radius: 8px; }
+        .tab-item.active { background: rgba(255, 255, 255, 0.15); color: #fff; border-bottom: 2px solid #d946ef; }
 
-.banner-slide {
-    width: 12.5%;
-    height: 100%;
-    flex-shrink: 0;
-}
+        /* Form Inputs */
+        .form-group { margin-bottom: 25px; position: relative; }
+        .form-label { display: block; font-size: 14px; color: #e2c2d3; margin-bottom: 8px; }
+        
+        .input-box-wrapper { display: flex; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; overflow: hidden; align-items: center; }
+        
+        /* Country Code Box with Dropdown Arrow */
+        .country-code-box { padding: 16px 14px; background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 15px; border-right: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; display: flex; align-items: center; gap: 8px; user-select: none; }
+        .arrow-icon { font-size: 11px; transition: transform 0.3s ease; }
+        .arrow-icon.rotate { transform: rotate(180deg); }
 
-.banner-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-}
+        /* Dropdown Popup Panel */
+        .country-dropdown { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #22121d; border: 1px solid #d946ef; border-radius: 10px; margin-top: 5px; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.5); overflow: hidden; }
+        .country-option { padding: 14px 18px; font-size: 15px; color: #fff; cursor: pointer; display: flex; justify-content: space-between; background: rgba(217, 70, 239, 0.15); }
+        .country-option:hover { background: rgba(217, 70, 239, 0.3); }
 
-@keyframes slideAnimation {
-    0% { transform: translateX(0%); }
-    10% { transform: translateX(0%); }
-    12.5% { transform: translateX(-12.5%); }
-    22.5% { transform: translateX(-12.5%); }
-    25% { transform: translateX(-25%); }
-    35% { transform: translateX(-25%); }
-    37.5% { transform: translateX(-37.5%); }
-    47.5% { transform: translateX(-37.5%); }
-    50% { transform: translateX(-50%); }
-    60% { transform: translateX(-50%); }
-    62.5% { transform: translateX(-62.5%); }
-    72.5% { transform: translateX(-62.5%); }
-    75% { transform: translateX(-75%); }
-    85% { transform: translateX(-75%); }
-    87.5% { transform: translateX(-87.5%); }
-    97.5% { transform: translateX(-87.5%); }
-    100% { transform: translateX(0%); }
-}
+        .input-field { width: 100%; background: transparent; border: none; padding: 16px; color: #fff; font-size: 15px; outline: none; }
+        .input-field::placeholder { color: #b08fa1; }
 
-        /* Notice Bar */
-        .notice { background: rgba(0, 0, 0, 0.25); margin: 0 12px; padding: 10px 12px; border-radius: 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ffcc00; color: #fff; }
-        .notice button { background: #ff3300; border: none; color: #fff; padding: 5px 14px; border-radius: 15px; font-weight: bold; font-size: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .password-wrapper { position: relative; }
+        .eye-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #d1b5c4; cursor: pointer; font-size: 18px; }
 
-        /* Category Tabs */
-        .categories { display: flex; gap: 10px; padding: 12px; overflow-x: auto; }
-        .cat-btn { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 9px 18px; border-radius: 22px; font-size: 13px; font-weight: bold; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-        .cat-btn.active { background: #ff3300; color: #fff; border: 1px solid #ffcc00; }
+        /* Action Button */
+        .action-btn { width: 100%; background: linear-gradient(90deg, #ff416c, #d946ef); color: #fff; border: none; padding: 18px; border-radius: 30px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 5px 20px rgba(217, 70, 239, 0.4); }
 
-        /* Section Title */
-        .section-title { padding: 0 15px; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; color: #fff; display: flex; justify-content: space-between; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .section-title span { font-size: 12px; color: #ffcc00; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        
+        /* Bottom Switch Link */
+        .switch-bottom-text { text-align: center; margin-top: 30px; font-size: 15px; color: #e2c2d3; padding-bottom: 20px; }
+        .switch-bottom-text span { color: #ff79c6; font-weight: bold; cursor: pointer; }
 
-        /* Game Grid */
-        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 12px; }
-        .game-card { background: rgba(0, 0, 0, 0.3); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,204,0,0.5); text-align: center; padding-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .game-card div.img-box { height: 155px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); background: linear-gradient(135deg, #ff9933, #e65c00); color: #fff; border-bottom: 1px solid rgba(255,204,0,0.4); }
-        .game-card p { font-size: 12px; font-weight: bold; margin-top: 6px; color: #fff; }
-
-        /* Leaderboard Section */
-        .leaderboard-container { background: rgba(0, 0, 0, 0.3); margin: 20px 12px; border-radius: 14px; padding: 18px; border: 2px solid #ffcc00; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-        .lb-title { text-align: center; color: #ffcc00; font-size: 18px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .lb-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 12px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); }
-        .lb-rank { font-weight: bold; color: #ffcc00; width: 30px; font-size: 14px; }
-        .lb-name { flex: 1; color: #fff; margin-left: 10px; font-weight: 600; }
-        .lb-prize { color: #00ff66; font-weight: bold; font-size: 14px; }
-
-        /* Providers Section */
-        .provider-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 12px; margin-top: 15px; }
-        .provider-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,204,0,0.6); border-radius: 10px; text-align: center; padding: 18px 0; font-weight: 900; font-size: 17px; color: #ffcc00; letter-spacing: 1.5px; box-shadow: inset 0 0 12px rgba(0,0,0,0.3); }
-
-        /* Footer Info */
-        .footer-info { padding: 18px; font-size: 11px; color: #fff; text-align: center; line-height: 1.6; background: rgba(0, 0, 0, 0.4); margin-top: 25px; border-top: 2px solid #ffcc00; }
-
-        /* Bottom Nav Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #993300; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid #ffcc00; z-index: 100; box-shadow: 0 -4px 15px rgba(0,0,0,0.4); }
-        .nav-item { text-align: center; color: #ffcc99; font-size: 11px; text-decoration: none; font-weight: bold; }
-        .nav-item.active { color: #ffcc00; text-shadow: 0 0 8px rgba(255,204,0,0.8); }
-        .nav-item div { font-size: 20px; margin-bottom: 2px; }
+        /* Custom Toast Notification Style */
+        #custom-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(25, 10, 20, 0.95);
+            color: #2ecc71;
+            padding: 20px 28px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #2ecc71;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+            max-width: 85%;
+        }
+        #custom-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Top Header -->
-    <div class="header">
-     <div class="balance-box" id="walletBal">₹0.00</div>
-        <div class="logo">MY CLUB</div>
-        <div class="header-right">
-            <span style="font-size: 18px;">📥</span>
-            <span class="lang-btn">🇺🇸 EN</span>
+    <!-- Top Gradient Header -->
+    <div class="top-header">
+        <div class="header-top-row">
+            <div class="logo-text">MY CLUB</div>
+            <div class="lang-box">🇺🇸 EN</div>
         </div>
+        <div class="header-title" id="page-heading">Log in</div>
+        <div class="header-desc" id="page-subheading">Please log in with your phone number</div>
     </div>
 
-<!-- Banner Slider Section -->
-<div class="banner-slider-container">
-    <div class="banner-track" id="bannerTrack">
-        <div class="banner-slide"><img src="banner1.jpg" alt="Banner 1"></div>
-        <div class="banner-slide"><img src="banner2.jpg" alt="Banner 2"></div>
-        <div class="banner-slide"><img src="banner3.jpg" alt="Banner 3"></div>
-        <div class="banner-slide"><img src="banner4.jpg" alt="Banner 4"></div>
-        <div class="banner-slide"><img src="banner5.jpg" alt="Banner 5"></div>
-        <div class="banner-slide"><img src="banner6.jpg" alt="Banner 6"></div>
-        <div class="banner-slide"><img src="banner7.jpg" alt="Banner 7"></div>
-        <div class="banner-slide"><img src="banner8.jpg" alt="Banner 8"></div>
-    </div>
-</div>
-
-    <!-- Notice -->
-    <div class="notice">
-        <span>📢 Welcome to join the Myclub platform...</span>
-        <button>Detail</button>
-    </div>
-
-    <!-- Category Tabs -->
-<div class="categories">
-    <div class="cat-btn active" onclick="switchTab('popular')">🔥 Popular</div>
-    <div class="cat-btn" onclick="switchTab('lottery')">🎱 Lottery</div>
-    <div class="cat-btn" onclick="switchTab('mini')">🚀 Mini games</div>
-</div>
-
-    <!-- Popular Section (12 Games) -->
-<div id="popular-games">
-    <div class="section-title">Popular Games (12) <span>ALL ></span></div>
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="aviator.jpg" alt="Aviator" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500835556837-99ac94a94552?w=400';">
+    <!-- Body Form Section -->
+    <div class="main-container">
+        
+        <div class="form-content-area">
+            <!-- Tab Switcher -->
+            <div class="tab-container">
+                <div class="tab-item active" id="login-tab-btn" onclick="switchTab('login')">Phone Number</div>
+                <div class="tab-item" id="reg-tab-btn" onclick="switchTab('register')">Register</div>
             </div>
-            <p>AVIATOR</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="jetx.jpg" alt="JetX" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+
+            <!-- Login Form -->
+            <div id="login-section" class="form-section active">
+                <div class="form-group">
+                    <label class="form-label">Phone number</label>
+                    <div class="input-box-wrapper">
+                        <div class="country-code-box" onclick="toggleCountryDropdown('login-dropdown', 'login-arrow')">
+                            <span id="login-selected-code">+91</span> <span class="arrow-icon" id="login-arrow">▼</span>
+                        </div>
+                        <input type="number" id="login-phone" class="input-field" placeholder="Please enter the phone number">
+                    </div>
+                    <!-- Dropdown List -->
+                    <div id="login-dropdown" class="country-dropdown">
+                        <div class="country-option" onclick="selectCountry('+91', 'India (भारत)', 'login-selected-code', 'login-dropdown', 'login-arrow')">
+                            <span>+91 India (भारत)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="login-pass" class="input-field" placeholder="Password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('login-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="handleLogin()">Log In</button>
             </div>
-            <p>JETX</p>
-        </div>
-   <a href="wingo.html" style="text-decoration: none; color: inherit;">
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="wingo.jpg" alt="Wingo" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
+
+            <!-- Register Form -->
+            <div id="register-section" class="form-section">
+                <div class="form-group">
+                    <label class="form-label">Phone number</label>
+                    <div class="input-box-wrapper">
+                        <div class="country-code-box" onclick="toggleCountryDropdown('reg-dropdown', 'reg-arrow')">
+                            <span id="reg-selected-code">+91</span> <span class="arrow-icon" id="reg-arrow">▼</span>
+                        </div>
+                        <input type="number" id="reg-phone" class="input-field" placeholder="Please enter the phone number">
+                    </div>
+                    <!-- Dropdown List -->
+                    <div id="reg-dropdown" class="country-dropdown">
+                        <div class="country-option" onclick="selectCountry('+91', 'India (भारत)', 'reg-selected-code', 'reg-dropdown', 'reg-arrow')">
+                            <span>+91 India (भारत)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Set password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="reg-pass" class="input-field" placeholder="Set password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('reg-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label class="form-label">Confirm password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="reg-confirm-pass" class="input-field" placeholder="Confirm password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('reg-confirm-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Invite code</label>
+                    <div class="input-box-wrapper">
+                        <input type="text" class="input-field" value="36262116285" readonly style="padding-left: 15px;">
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="handleRegister()">Register</button>
             </div>
-            <p>WINGO</p>
         </div>
 
-       </a>
-
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="cricket.jpg" alt="Cricket" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
-            </div>
-            <p>CRICKET</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="pubg.jpg" alt="PUBG" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
-            </div>
-            <p>PUBG 1MIN</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="kraken.jpg" alt="Kraken" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
-            </div>
-            <p>POWER KRAKEN</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="money.jpg" alt="Money Coming" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
-            </div>
-            <p>MONEY COMING</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none;">
-                <img src="fortune2.jpg" alt="Fortune Gems 2" style="width:100%; height:100%; object-fit:cover; border-radius:8px 8px 0 0;">
-            </div>
-            <p>FORTUNE GEMS 2</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
-                <img src="fortune.jpg" alt="Fortune Gems" style="width:100%; height:100%; object-fit:cover; display:block;">
-            </div>
-            <p>FORTUNE GEMS</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
-                <img src="hotspin.jpg" alt="Hot Spin" style="width:100%; height:100%; object-fit:cover; display:block;">
-            </div>
-            <p>HOT SPIN</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
-                <img src="crazy777.jpg" alt="Crazy 777" style="width:100%; height:100%; object-fit:cover; display:block;">
-            </div>
-            <p>CRAZY 777</p>
-        </div>
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
-                <img src="wildfire.jpg" alt="Wildfire" style="width:100%; height:100%; object-fit:cover; display:block;">
-            </div>
-            <p>WILDFIRE WINS</p>
+        <!-- Bottom Switch Link -->
+        <div class="switch-bottom-text" id="bottom-switch-text">
+            Don't have an account? <span onclick="switchTab('register')">Register</span>
         </div>
 
-    </div>
-</div> <!-- Yeh popular-games ko close kar raha hai -->
-
-<!-- Lottery Section (Hidden by default) -->
-<div id="lottery-games" style="display: none;">
-    <div class="section-title">Lottery Games <span>ALL ></span></div>
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="img-box" style="padding:0; background:none; overflow:hidden;">
-                <img src="wingo.jpg" alt="Win Go" style="width:100%; height:100%; object-fit:cover; display:block;">
-        </div>
-            <p>WIN GO</p>
-        </div>
-    </div>
-</div>
-
-
-<!-- Leaderboard Section -->
-<div class="leaderboard-container">
-    <div class="lb-title">🏆 Winning Leaderboard</div>
-    
-    <div class="lb-item">
-        <span class="lb-rank">01</span>
-        <span class="lb-name">Mem***QAY</span>
-        <span class="lb-prize">₹263,480,833</span>
-    </div>
-    
-    <div class="lb-item">
-        <span class="lb-rank">02</span>
-        <span class="lb-name">Mem***PTN</span>
-        <span class="lb-prize">₹39,444,020</span>
-    </div>
-    
-    <div class="lb-item">
-        <span class="lb-rank">03</span>
-        <span class="lb-name">Mem***S4N</span>
-        <span class="lb-prize">₹1,323,000</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">04</span>
-        <span class="lb-name">Mem***6J8</span>
-        <span class="lb-prize">₹1,151,409</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">05</span>
-        <span class="lb-name">Mem***DTO</span>
-        <span class="lb-prize">₹616,104</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">06</span>
-        <span class="lb-name">Mem***CVS</span>
-        <span class="lb-prize">₹500,977</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">07</span>
-        <span class="lb-name">Mem***Me</span>
-        <span class="lb-prize">₹347,202</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">08</span>
-        <span class="lb-name">Mem***D1E</span>
-        <span class="lb-prize">₹317,312</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">09</span>
-        <span class="lb-name">Mem***MXT</span>
-        <span class="lb-prize">₹313,863</span>
-    </div>
-
-    <div class="lb-item">
-        <span class="lb-rank">10</span>
-        <span class="lb-name">Mem***6U0</span>
-        <span class="lb-prize">₹298,521</span>
-    </div>
-
-</div> <!-- Yeh div ab sabhi 10 items ke baad band hoga, taaki sab us orange box ke andar rahein -->
-
-    <!-- Providers Section -->
-    <div class="section-title">Game Providers</div>
-    <div class="provider-grid">
-        <div class="provider-card">PG</div>
-        <div class="provider-card">JDB</div>
-        <div class="provider-card">JILI</div>
-        <div class="provider-card">TB</div>
-        <div class="provider-card">YGGDRASIL</div>
-        <div class="provider-card">Evo</div>
-        <div class="provider-card">CQ9</div>
-        <div class="provider-card">SG</div>
-        <div class="provider-card">PP</div>
-    </div>
-
-    <!-- Footer Description -->
-    <div class="footer-info">
-        <p>The platform advocates fairness, justice, and openness, mainly operate fair lottery, blockchain games, and casino slot machine games.</p>
-        <p style="margin-top: 8px; color: #ffcc00; font-weight: bold;">Gambling can be addictive, please play rationally. 18+</p>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <div>🏠</div> Home
-        </a>
-        <a href="#" class="nav-item">
-            <div>🎁</div> Activity
-        </a>
-        <a href="#" class="nav-item" style="color: #ffcc00;">
-            <div>💎</div> Promotion
-        </a>
-        <a href="#" class="nav-item">
-            <div>👛</div> Wallet
-        </a>
-        <a href="#" class="nav-item">
-            <div>👤</div> Account
-        </a>
     </div>
 
 <script>
-    window.addEventListener('pageshow', loadUserBalance);
-    window.addEventListener('DOMContentLoaded', loadUserBalance);
-
-    function loadUserBalance() {
-        let currentUser = localStorage.getItem('currentLoggedInPhone');
-        let users = JSON.parse(localStorage.getItem('myClubUsers')) || {};
-        
-        let currentBalance = 0.00;
-        
-        if (currentUser && users[currentUser]) {
-            currentBalance = users[currentUser].balance;
+    // Custom Toast Notification Function
+    function showToast(message) {
+        let existingToast = document.getElementById('custom-toast');
+        if (existingToast) {
+            existingToast.remove();
         }
         
-        let el = document.getElementById('walletBal');
-        if (el) {
-            el.innerText = `₹${currentBalance.toFixed(2)}`;
+        let toast = document.createElement('div');
+        toast.id = 'custom-toast';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    function switchTab(type) {
+        if(type === 'login') {
+            document.getElementById('login-tab-btn').classList.add('active');
+            document.getElementById('reg-tab-btn').classList.remove('active');
+            document.getElementById('login-section').classList.add('active');
+            document.getElementById('register-section').classList.remove('active');
+            
+            document.getElementById('page-heading').innerText = "Log in";
+            document.getElementById('page-subheading').innerText = "Please log in with your phone number";
+            document.getElementById('bottom-switch-text').innerHTML = `Don't have an account? <span onclick="switchTab('register')">Register</span>`;
+        } else {
+            document.getElementById('reg-tab-btn').classList.add('active');
+            document.getElementById('login-tab-btn').classList.remove('active');
+            document.getElementById('register-section').classList.add('active');
+            document.getElementById('login-section').classList.remove('active');
+            
+            document.getElementById('page-heading').innerText = "Register";
+            document.getElementById('page-subheading').innerText = "Please register by phone number";
+            document.getElementById('bottom-switch-text').innerHTML = `Already have an account? <span onclick="switchTab('login')">Log In</span>`;
         }
     }
 
+    function toggleCountryDropdown(dropdownId, arrowId) {
+        let dropdown = document.getElementById(dropdownId);
+        let arrow = document.getElementById(arrowId);
+        
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+            arrow.classList.remove('rotate');
+        } else {
+            dropdown.style.display = "block";
+            arrow.classList.add('rotate');
+        }
+    }
+
+    function selectCountry(code, name, codeSpanId, dropdownId, arrowId) {
+        document.getElementById(codeSpanId).innerText = code;
+        document.getElementById(dropdownId).style.display = "none";
+        document.getElementById(arrowId).classList.remove('rotate');
+    }
+
+    function togglePassword(fieldId) {
+        let field = document.getElementById(fieldId);
+        if (field.type === "password") {
+            field.type = "text";
+        } else {
+            field.type = "password";
+        }
+    }
+
+    // SMART HELPER FUNCTION FOR USERS DATA
+    function getStoredUsers() {
+        let rawData = localStorage.getItem('myClubUsers');
+        let users = {};
+        try {
+            let parsed = JSON.parse(rawData);
+            if (Array.isArray(parsed)) {
+                parsed.forEach(u => {
+                    users[u.phone] = { pass: u.pass, balance: u.balance || 0.00 };
+                });
+            } else if (parsed && typeof parsed === 'object' && parsed !== null) {
+                users = parsed;
+            }
+        } catch(e) {
+            users = {};
+        }
+        return users;
+    }
+
+    // SMART REGISTRATION LOGIC
+    function handleRegister() {
+        let phone = document.getElementById('reg-phone').value.trim();
+        let pass = document.getElementById('reg-pass').value;
+        let confirmPass = document.getElementById('reg-confirm-pass').value;
+
+        if(phone.length < 10) {
+            showToast("Kripya sahi phone number darj karein!");
+            return;
+        }
+        if(pass.trim() === "") {
+            showToast("Kripya password set karein!");
+            return;
+        }
+        if(pass !== confirmPass) {
+            showToast("Password aur Confirm Password match nahi ho rahe hain!");
+            return;
+        }
+
+        let users = getStoredUsers();
+
+        if(users[phone]) {
+            showToast("Yeh phone number pehle se registered hai! Kripya Log In karein.");
+            setTimeout(() => {
+                switchTab('login');
+            }, 1500);
+            return;
+        }
+
+        users[phone] = {
+            pass: pass,
+            balance: 0.00
+        };
+
+        localStorage.setItem('myClubUsers', JSON.stringify(users));
+
+        showToast("Registration safal raha! Ab aap login kar sakte hain.");
+        setTimeout(() => {
+            switchTab('login');
+        }, 1500);
+    }
+
+    // SMART LOGIN LOGIC
+    function handleLogin() {
+        let phone = document.getElementById('login-phone').value.trim();
+        let pass = document.getElementById('login-pass').value;
+
+        if(phone.length < 10) {
+            showToast("Kripya sahi phone number darj karein!");
+            return;
+        }
+
+        let users = getStoredUsers();
+
+        if(!users[phone]) {
+            showToast("Yeh number registered nahi hai! Kripya pehle Register karein.");
+            setTimeout(() => {
+                switchTab('register');
+            }, 1500);
+            return;
+        }
+
+        if(users[phone].pass !== pass) {
+            showToast("Galat password! Kripya sahi password dalein.");
+            return;
+        }
+
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentLoggedInPhone', phone);
+        
+        showToast("Login safal raha!");
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
+    }
 </script>
 
 </body>
 </html>
-
