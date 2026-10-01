@@ -3,60 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Club Game</title>
+    <title>MY CLUB - Log in & Register</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f1218; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 480px; background: #181c24; min-height: 100vh; padding: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-y: auto; }
-        h1 { font-size: 24px; margin-bottom: 15px; color: #fff; }
-        p { font-size: 14px; color: #b0b0b0; line-height: 1.6; margin-bottom: 20px; }
-        p span, a.highlight { color: #ff4757; text-decoration: none; font-weight: bold; }
-        .btn-gradient { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #ff4757, #3b82f6); color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; text-decoration: none; margin: 20px 0; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
-        .logo-container { text-align: center; margin: 25px 0; }
-        .logo-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ff4757; box-shadow: 0 0 20px rgba(255, 71, 87, 0.5); }
-        .info-table { width: 100%; border-collapse: collapse; margin-top: 25px; margin-bottom: 30px; background: #232833; border-radius: 8px; overflow: hidden; }
-        .info-table th, .info-table td { border: 1px solid #333946; padding: 12px; font-size: 14px; text-align: left; }
-        .info-table th { background: #2f3542; color: #fff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        
+        /* Poori screen ka background gulabi/maroon gradient */
+        body { 
+            background: linear-gradient(135deg, #8e355f, #5a1833, #320d1c); 
+            color: #fff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* Top Gradient Header */
+        .top-header { background: linear-gradient(135deg, #ff416c, #ff4b2b, #d946ef); padding: 35px 20px; color: #fff; }
+        .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo-text { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+        .lang-box { background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 15px; font-size: 13px; }
+        
+        .header-title { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        .header-desc { font-size: 14px; color: rgba(255,255,255,0.85); }
+
+        /* Main Form Container */
+        .main-container { padding: 35px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .form-content-area { flex: 1; }
+
+        /* Tabs style */
+        .tab-container { display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.25); border-radius: 10px; margin-bottom: 30px; padding: 6px; }
+        .tab-item { flex: 1; text-align: center; padding: 14px; font-size: 15px; font-weight: bold; color: #d1b5c4; cursor: pointer; border-radius: 8px; }
+        .tab-item.active { background: rgba(255, 255, 255, 0.15); color: #fff; border-bottom: 2px solid #d946ef; }
+
+        /* Form Inputs */
+        .form-group { margin-bottom: 25px; position: relative; }
+        .form-label { display: block; font-size: 14px; color: #e2c2d3; margin-bottom: 8px; }
+        
+        .input-box-wrapper { display: flex; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; overflow: hidden; align-items: center; }
+        
+        /* Country Code Box with Dropdown Arrow */
+        .country-code-box { padding: 16px 14px; background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 15px; border-right: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; display: flex; align-items: center; gap: 8px; user-select: none; }
+        .arrow-icon { font-size: 11px; transition: transform 0.3s ease; }
+        .arrow-icon.rotate { transform: rotate(180deg); }
+
+        /* Dropdown Popup Panel */
+        .country-dropdown { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #22121d; border: 1px solid #d946ef; border-radius: 10px; margin-top: 5px; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.5); overflow: hidden; }
+        .country-option { padding: 14px 18px; font-size: 15px; color: #fff; cursor: pointer; display: flex; justify-content: space-between; background: rgba(217, 70, 239, 0.15); }
+        .country-option:hover { background: rgba(217, 70, 239, 0.3); }
+
+        .input-field { width: 100%; background: transparent; border: none; padding: 16px; color: #fff; font-size: 15px; outline: none; }
+        .input-field::placeholder { color: #b08fa1; }
+
+        .password-wrapper { position: relative; }
+        .eye-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #d1b5c4; cursor: pointer; font-size: 18px; }
+
+        /* Action Button */
+        .action-btn { width: 100%; background: linear-gradient(90deg, #ff416c, #d946ef); color: #fff; border: none; padding: 18px; border-radius: 30px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 5px 20px rgba(217, 70, 239, 0.4); }
+
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        
+        /* Bottom Switch Link */
+        .switch-bottom-text { text-align: center; margin-top: 30px; font-size: 15px; color: #e2c2d3; padding-bottom: 20px; }
+        .switch-bottom-text span { color: #ff79c6; font-weight: bold; cursor: pointer; }
+
+        /* Custom Toast Notification Style */
+        #custom-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(25, 10, 20, 0.95);
+            color: #2ecc71;
+            padding: 20px 28px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #2ecc71;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+            max-width: 85%;
+        }
+        #custom-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>My Club Game</h1>
-    <p>
-        <span>My Club</span> is a secure online gaming platform where users can play popular games such as Wingo, K3, 5D, and Aviator, & earning exciting real rewards through skill based gameplay and easily <a href="login.html" class="highlight">login My Club</a> users can test their luck and skills through easy-to-play games and earn real rewards along with exciting prizes.
-    </p>
 
-    <a href="login.html" class="btn-gradient">My Club App</a>
-
-    <div class="logo-container">
-        <!-- Yahan aapka gol logo lagaya gaya hai -->
-        <img src="watermarked_img_3525778570903118373.png" alt="My Club Logo" class="logo-img">
+    <!-- Top Gradient Header -->
+    <div class="top-header">
+        <div class="header-top-row">
+            <div class="logo-text">MY CLUB</div>
+            <div class="lang-box">🇺🇸 EN</div>
+        </div>
+        <div class="header-title" id="page-heading">Log in</div>
+        <div class="header-desc" id="page-subheading">Please log in with your phone number</div>
     </div>
 
-    <a href="login.html" class="btn-gradient">REGISTER NOW</a>
+    <!-- Body Form Section -->
+    <div class="main-container">
+        
+        <div class="form-content-area">
+            <!-- Tab Switcher -->
+            <div class="tab-container">
+                <div class="tab-item active" id="login-tab-btn" onclick="switchTab('login')">Phone Number</div>
+                <div class="tab-item" id="reg-tab-btn" onclick="switchTab('register')">Register</div>
+            </div>
 
-    <p style="font-size: 13px;">
-        In this guide, you’ll discover everything about <a href="login.html" class="highlight">My Club login</a>, including registration steps, app download, features, and how the platform works, ways to earn rewards, and how to withdraw your earnings quickly and securely.
-    </p>
+            <!-- Login Form -->
+            <div id="login-section" class="form-section active">
+                <div class="form-group">
+                    <label class="form-label">Phone number</label>
+                    <div class="input-box-wrapper">
+                        <div class="country-code-box" onclick="toggleCountryDropdown('login-dropdown', 'login-arrow')">
+                            <span id="login-selected-code">+91</span> <span class="arrow-icon" id="login-arrow">▼</span>
+                        </div>
+                        <input type="number" id="login-phone" class="input-field" placeholder="Please enter the phone number">
+                    </div>
+                    <!-- Dropdown List -->
+                    <div id="login-dropdown" class="country-dropdown">
+                        <div class="country-option" onclick="selectCountry('+91', 'India (भारत)', 'login-selected-code', 'login-dropdown', 'login-arrow')">
+                            <span>+91 India (भारत)</span>
+                        </div>
+                    </div>
+                </div>
 
-    <table class="info-table">
-        <tr>
-            <th>Feature</th>
-            <th>Details</th>
-        </tr>
-        <tr>
-            <td>App Name</td>
-            <td><a href="login.html" class="highlight">My Club</a></td>
-        </tr>
-        <tr>
-            <td>Latest Version</td>
-            <td>3.1</td>
-        </tr>
-        <tr>
-            <td>Platform Type</td>
-            <td>Color Prediction, Jili, Limbo, and Aviator</td>
-        </tr>
-    </table>
-</div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="login-pass" class="input-field" placeholder="Password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('login-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="handleLogin()">Log In</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-section" class="form-section">
+                <div class="form-group">
+                    <label class="form-label">Phone number</label>
+                    <div class="input-box-wrapper">
+                        <div class="country-code-box" onclick="toggleCountryDropdown('reg-dropdown', 'reg-arrow')">
+                            <span id="reg-selected-code">+91</span> <span class="arrow-icon" id="reg-arrow">▼</span>
+                        </div>
+                        <input type="number" id="reg-phone" class="input-field" placeholder="Please enter the phone number">
+                    </div>
+                    <!-- Dropdown List -->
+                    <div id="reg-dropdown" class="country-dropdown">
+                        <div class="country-option" onclick="selectCountry('+91', 'India (भारत)', 'reg-selected-code', 'reg-dropdown', 'reg-arrow')">
+                            <span>+91 India (भारत)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Set password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="reg-pass" class="input-field" placeholder="Set password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('reg-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label class="form-label">Confirm password</label>
+                    <div class="input-box-wrapper password-wrapper">
+                        <input type="password" id="reg-confirm-pass" class="input-field" placeholder="Confirm password" style="padding-right: 45px;">
+                        <button type="button" class="eye-btn" onclick="togglePassword('reg-confirm-pass')">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Invite code</label>
+                    <div class="input-box-wrapper">
+                        <input type="text" class="input-field" value="36262116285" readonly style="padding-left: 15px;">
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="handleRegister()">Register</button>
+            </div>
+        </div>
+
+        <!-- Bottom Switch Link -->
+        <div class="switch-bottom-text" id="bottom-switch-text">
+            Don't have an account? <span onclick="switchTab('register')">Register</span>
+        </div>
+
+    </div>
+
+<script>
+    // Custom Toast Notification Function
+    function showToast(message) {
+        let existingToast = document.getElementById('custom-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        
+        let toast = document.createElement('div');
+        toast.id = 'custom-toast';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    function switchTab(type) {
+        if(type === 'login') {
+            document.getElementById('login-tab-btn').classList.add('active');
+            document.getElementById('reg-tab-btn').classList.remove('active');
+            document.getElementById('login-section').classList.add('active');
+            document.getElementById('register-section').classList.remove('active');
+            
+            document.getElementById('page-heading').innerText = "Log in";
+            document.getElementById('page-subheading').innerText = "Please log in with your phone number";
+            document.getElementById('bottom-switch-text').innerHTML = `Don't have an account? <span onclick="switchTab('register')">Register</span>`;
+        } else {
+            document.getElementById('reg-tab-btn').classList.add('active');
+            document.getElementById('login-tab-btn').classList.remove('active');
+            document.getElementById('register-section').classList.add('active');
+            document.getElementById('login-section').classList.remove('active');
+            
+            document.getElementById('page-heading').innerText = "Register";
+            document.getElementById('page-subheading').innerText = "Please register by phone number";
+            document.getElementById('bottom-switch-text').innerHTML = `Already have an account? <span onclick="switchTab('login')">Log In</span>`;
+        }
+    }
+
+    function toggleCountryDropdown(dropdownId, arrowId) {
+        let dropdown = document.getElementById(dropdownId);
+        let arrow = document.getElementById(arrowId);
+        
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+            arrow.classList.remove('rotate');
+        } else {
+            dropdown.style.display = "block";
+            arrow.classList.add('rotate');
+        }
+    }
+
+    function selectCountry(code, name, codeSpanId, dropdownId, arrowId) {
+        document.getElementById(codeSpanId).innerText = code;
+        document.getElementById(dropdownId).style.display = "none";
+        document.getElementById(arrowId).classList.remove('rotate');
+    }
+
+    function togglePassword(fieldId) {
+        let field = document.getElementById(fieldId);
+        if (field.type === "password") {
+            field.type = "text";
+        } else {
+            field.type = "password";
+        }
+    }
+
+    // SMART HELPER FUNCTION FOR USERS DATA
+    function getStoredUsers() {
+        let rawData = localStorage.getItem('myClubUsers');
+        let users = {};
+        try {
+            let parsed = JSON.parse(rawData);
+            if (Array.isArray(parsed)) {
+                parsed.forEach(u => {
+                    users[u.phone] = { pass: u.pass, balance: u.balance || 0.00 };
+                });
+            } else if (parsed && typeof parsed === 'object' && parsed !== null) {
+                users = parsed;
+            }
+        } catch(e) {
+            users = {};
+        }
+        return users;
+    }
+
+    // SMART REGISTRATION LOGIC
+    function handleRegister() {
+        let phone = document.getElementById('reg-phone').value.trim();
+        let pass = document.getElementById('reg-pass').value;
+        let confirmPass = document.getElementById('reg-confirm-pass').value;
+
+        if(phone.length < 10) {
+            showToast("Kripya sahi phone number darj karein!");
+            return;
+        }
+        if(pass.trim() === "") {
+            showToast("Kripya password set karein!");
+            return;
+        }
+        if(pass !== confirmPass) {
+            showToast("Password aur Confirm Password match nahi ho rahe hain!");
+            return;
+        }
+
+        let users = getStoredUsers();
+
+        if(users[phone]) {
+            showToast("Yeh phone number pehle se registered hai! Kripya Log In karein.");
+            setTimeout(() => {
+                switchTab('login');
+            }, 1500);
+            return;
+        }
+
+        users[phone] = {
+            pass: pass,
+            balance: 0.00
+        };
+
+        localStorage.setItem('myClubUsers', JSON.stringify(users));
+
+        showToast("Registration safal raha! Ab aap login kar sakte hain.");
+        setTimeout(() => {
+            switchTab('login');
+        }, 1500);
+    }
+
+    // SMART LOGIN LOGIC
+    function handleLogin() {
+        let phone = document.getElementById('login-phone').value.trim();
+        let pass = document.getElementById('login-pass').value;
+
+        if(phone.length < 10) {
+            showToast("Kripya sahi phone number darj karein!");
+            return;
+        }
+
+        let users = getStoredUsers();
+
+        if(!users[phone]) {
+            showToast("Yeh number registered nahi hai! Kripya pehle Register karein.");
+            setTimeout(() => {
+                switchTab('register');
+            }, 1500);
+            return;
+        }
+
+        if(users[phone].pass !== pass) {
+            showToast("Galat password! Kripya sahi password dalein.");
+            return;
+        }
+
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentLoggedInPhone', phone);
+        
+        showToast("Login safal raha!");
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
+    }
+</script>
+
 </body>
 </html>
