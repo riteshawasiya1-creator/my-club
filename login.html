@@ -32,11 +32,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     border: 3px solid #ff4757;
     box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
 }
 .logo-img {
-    display: none;
+    width: 105%;
+    height: 105%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .btn-gradient {
